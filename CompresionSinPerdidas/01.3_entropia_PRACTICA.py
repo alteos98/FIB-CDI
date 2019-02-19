@@ -37,7 +37,7 @@ def LongitudMedia(C,p):
 Dada una ddp p, hallar su entropía.
 '''
 def H1(p):
-    
+    return False
 
 '''
 Dada una lista de frecuencias n, hallar su entropía.

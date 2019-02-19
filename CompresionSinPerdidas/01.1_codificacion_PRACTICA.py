@@ -74,15 +74,13 @@ c2m = dict([(c,m) for m, c in R])
 Codificar y decodificar 20 mensajes aleatorios de longitudes también aleatorias.  
 Comprobar si los mensajes decodificados coinciden con los originales.
 '''
-M1 = 'aebcd'
-M2 = 'abc'
-M3 = 'dbbb'
-M4 = 'cdbaabdddcebbb'
+M = ['aebcd', 'abc', 'dbbb', 'cdbaabdddcebbb', 'aaaaaa', 'bb', 'abcabc', 'decba', 'aaaaaaaaaaaaaaaabddbdbbcbdbdeeee', 'eedebababceeddde']
 
-#res = Encode(M4,m2c)
-#print(res)
-#res = Decode(res,c2m)
-#print(res)
+for m in M:
+    encode = Encode(m,m2c)
+    print(encode)
+    decode = Decode(encode,c2m)
+    print(decode)
 
 #------------------------------------------------------------------------
 # Ejemplo 3 
@@ -115,6 +113,7 @@ print(res)
 '''
 ¿Por qué da error?
 No sabe diferenciar entre a, b, c o d ya que empiezan todos ellos por 0.
+En el caso 'ae' vemos que no falla, solamente en los casos en que hay b, c o d.
 
 (No es necesario volver a implementar Decode(C, m2c) para que no dé error)
 '''

@@ -37,13 +37,22 @@ def LongitudMedia(C,p):
 Dada una ddp p, hallar su entropía.
 '''
 def H1(p):
-    return False
+    sum = 0.0
+    for x in p:
+        if x != 0:
+            sum += x * math.log2(x)
+    return -sum
 
 '''
 Dada una lista de frecuencias n, hallar su entropía.
 '''
 def H2(n):
-    return False
+    frecuenciaTotal = sum(n)
+    sumatorio = 0.0
+    for x in n:
+        if x != 0:
+            sumatorio += (x / frecuenciaTotal) * math.log2((x / frecuenciaTotal))
+    return -sumatorio
 
 
 
@@ -55,18 +64,17 @@ p=[0.5,0.1,0.1,0.1,0.1,0.1,0]
 n=[5,2,1,1,1]
 
 print(es_ddp(p))
-#print(H1(p))
-#print(H2(n))
+print(H1(p))
+print(H2(n))
 print(LongitudMedia(C,p))
 
 
 
 '''
-Dibujar H(p,1-p)
+Dibujar H([p,1-p])
 '''
-
-
-
-
-
+p = np.linspace(0,1,100)
+y = [H1([p[i],1-p[i]]) for i in range(len(p))]
+plt.plot(p,y)
+plt.show()
 

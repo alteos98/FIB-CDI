@@ -18,9 +18,7 @@ def  kraft1(L, q=2):
         return True
     else:
         return False
-
-
-
+        
 '''
 Dada la lista L de longitudes de las palabras de un código 
 q-ario, calcular el máximo número de palabras de longitud 
@@ -29,7 +27,11 @@ máxima, max(L), que se pueden añadir y seguir siendo un código.
 '''
 
 def  kraft2(L, q=2):
-    return False
+    l = max(L)
+    res = pow(2, l)
+    for x in L:
+        res -= (pow(2, l) / pow(2, x))
+    return round(res)
 
 '''
 Dada la lista L de longitudes de las palabras de un  
@@ -39,7 +41,10 @@ un código.
 '''
 
 def  kraft3(L, Ln, q=2):
-    return False
+    res = pow(2, Ln)
+    for x in L:
+        res -= (pow(2, Ln) / pow(2, x))
+    return round(res)
 
 '''
 Dada la lista L de longitudes de las palabras de un  
@@ -57,6 +62,8 @@ Ejemplos
 
 L=[2,3,3,3,4,4,4,6]
 q=2
+
+#L = [2,2,3,3,5]
 
 print("\n",sorted(L),' codigo final:',Code(L,q))
 print(kraft1(L,q))

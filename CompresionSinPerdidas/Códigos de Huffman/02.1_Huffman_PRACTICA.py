@@ -74,13 +74,35 @@ Definir otra función que decodifique los mensajes codificados con la función
 anterior.
 '''
 
+def Encode(M, m2c):
+    C = ''
+    for x in M:
+        C = C + m2c[x]
+    return C
+
+def Ddp():
+    return ddp
+
 def EncodeHuffman(mensaje_a_codificar):
-
+    frecuencias = tablaFrecuencias(mensaje_a_codificar)
+    ddp = Ddp(frecuencias)
+    m2c = Huffman(ddp) #habrá que darle el mismo formato a 'm2c' que el usado en las funciones anteriores
+    mensaje_codificado = Encode(mensaje_a_codificar, m2c)
     return mensaje_codificado, m2c
-    
-    
-def DecodeHuffman(mensaje_codificado,m2c):
 
+def Decode(C,c2m):
+    M = ''
+    while len(C):
+        aux = C[0]
+        C = C[1:]
+        while aux not in c2m: 
+            aux += C[0]
+            C = C[1:]
+        M = M + c2m[aux]
+    return M
+
+def DecodeHuffman(mensaje_codificado,m2c):
+    mensaje_decodificado = Decode(mensaje_codificado, m2c)
     return mensaje_decodificado
         
 

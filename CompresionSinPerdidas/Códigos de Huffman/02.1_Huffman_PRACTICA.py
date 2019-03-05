@@ -11,7 +11,34 @@
 Dada una distribucion de probabilidad, hallar un código de Huffman asociado
 '''
 
+def MapToList(p):
+    l = []
+    for x in p:
+        elem = [p[x], [x]]
+        l.append(elem)
+    return l
+
+def getKey(item):
+    return item[0]
+
 def Huffman(p):
+    # Caso base
+    if (len(p) == 2):
+        return dict(zip(p.keys(), ['0', '1'])) # Tiene que devolver 0 y 1
+    
+    # Ordenamos y seleccionamos los dos elementos con menor frecuencia
+    sorted(p, key=getKey)
+    p_copia = p.copy()
+    elem0 = p[0]
+    elem1 = p[1]
+    p_copia.pop(0)
+    p_copia.pop(1)
+    p_copia.append(elem0 + elem1)
+
+    # Parte recursiva
+    codigo = Huffman(p_copia)
+    ca1a2 = codigo.pop(elem0 + elem1)
+    codigo[elem0], codigo[elem1] = ca1a2 + '0', ca1a2 + '1'
 
     return codigo
 
@@ -91,7 +118,8 @@ def Ddp(frecuencias):
 def EncodeHuffman(mensaje_a_codificar):
     frecuencias = tablaFrecuencias(mensaje_a_codificar)
     ddp = Ddp(frecuencias)
-    m2c = Huffman(ddp) #habrá que darle el mismo formato a 'm2c' que el usado en las funciones anteriores
+    l = MapToList(ddp)
+    m2c = Huffman(l) #habrá que darle el mismo formato a 'm2c' que el usado en las funciones anteriores
     mensaje_codificado = Encode(mensaje_a_codificar, m2c)
     return mensaje_codificado, m2c
 

@@ -46,16 +46,22 @@ p=[1/n for _ in range(n)]
 Dado un mensaje hallar la tabla de frecuencia de los caracteres que lo componen
 '''
 def tablaFrecuencias(mensaje):
-    
-    return frecuencias
-    
+    listapalabras = {}
+    for x in mensaje:
+        if x not in listapalabras:
+            listapalabras[x] =  1
+        else:
+            listapalabras[x] = listapalabras[x] + 1
+    return listapalabras
 
-"""
-Ejemplo
+
+
 
 mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte. En las calles no había más ruido que el rumor estridente de los remolinos de polvo, trapos, pajas y papeles que iban de arroyo en arroyo, de acera en acera, de esquina en esquina revolando y persiguiéndose, como mariposas que se buscan y huyen y que el aire envuelve en sus pliegues invisibles. Cual turbas de pilluelos, aquellas migajas de la basura, aquellas sobras de todo se juntaban en un montón, parábanse como dormidas un momento y brincaban de nuevo sobresaltadas, dispersándose, trepando unas por las paredes hasta los cristales temblorosos de los faroles, otras hasta los carteles de papel mal pegado a las esquinas, y había pluma que llegaba a un tercer piso, y arenilla que se incrustaba para días, o para años, en la vidriera de un escaparate, agarrada a un plomo. Vetusta, la muy noble y leal ciudad, corte en lejano siglo, hacía la digestión del cocido y de la olla podrida, y descansaba oyendo entre sueños el monótono y familiar zumbido de la campana de coro, que retumbaba allá en lo alto de la esbeltatorre en la Santa Basílica. La torre de la catedral, poema romántico de piedra,delicado himno, de dulces líneas de belleza muda y perenne, era obra del siglo diez y seis, aunque antes comenzada, de estilo gótico, pero, cabe decir, moderado por uninstinto de prudencia y armonía que modificaba las vulgares exageraciones de estaarquitectura. La vista no se fatigaba contemplando horas y horas aquel índice depiedra que señalaba al cielo; no era una de esas torres cuya aguja se quiebra desutil, más flacas que esbeltas, amaneradas, como señoritas cursis que aprietandemasiado el corsé; era maciza sin perder nada de su espiritual grandeza, y hasta sussegundos corredores, elegante balaustrada, subía como fuerte castillo, lanzándosedesde allí en pirámide de ángulo gracioso, inimitable en sus medidas y proporciones.Como haz de músculos y nervios la piedra enroscándose en la piedra trepaba a la altura, haciendo equilibrios de acróbata en el aire; y como prodigio de juegosmalabares, en una punta de caliza se mantenía, cual imantada, una bola grande debronce dorado, y encima otra más pequenya, y sobre ésta una cruz de hierro que acababaen pararrayos.'
 
-tablaFrecuencias(mensaje)=
+print(tablaFrecuencias(mensaje))
+
+"""
 [[' ', 381], [',', 46], ['.', 8], [';', 3], ['B', 1], ['C', 2], ['E', 2], ['L', 3], ['N', 1], ['S', 2], ['V', 1], ['a', 267], ['b', 46], ['c', 64], ['d', 104], ['e', 238], ['f', 6], ['g', 23], ['h', 15], ['i', 98], ['j', 7], ['l', 112], ['m', 49], ['n', 111], ['o', 141], ['p', 48], ['q', 25], ['r', 126], ['s', 145], ['t', 68], ['u', 87], ['v', 11], ['x', 1], ['y', 30], ['z', 11], ['á', 11], ['é', 3], ['í', 12], ['ñ', 4], ['ó', 5], ['ú', 1]]
 """
 

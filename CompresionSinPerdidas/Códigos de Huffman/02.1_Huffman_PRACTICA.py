@@ -21,24 +21,30 @@ def MapToList(p):
 def getKey(item):
     return item[0]
 
+# https://docs.python.org/3/library/heapq.html
 def Huffman(p):
     # Caso base
+    # Cuando solo nos quedan dos elementos, a uno se le asignas un 0 y al otro un 1 en el árbol
     if (len(p) == 2):
-        return dict(zip(p.keys(), ['0', '1'])) # Tiene que devolver 0 y 1
+        return dict(zip(p.keys(), ['0', '1']))
     
     # Ordenamos y seleccionamos los dos elementos con menor frecuencia
-    sorted(p, key=getKey)
+    #sorted(p, key=getKey)
     p_copia = p.copy()
-    elem0 = p[0]
-    elem1 = p[1]
-    p_copia.pop(0)
-    p_copia.pop(1)
-    p_copia.append(elem0 + elem1)
+    # Falta ordenar bien
+    # Pasamos el diccionario a lista, entonces ordenamos y seleccionamos los dos nodos con menor frecuencia
+    sorted_p = sorted(p.items(), key = getKey)
+    elem0 = sorted_p[0][0] # key value del nodo con menor frecuencia de p
+    elem1 = sorted_p[1][0] # key value del segundo nodo con menor frecuencia de p
+    # sacamos los dos elementos para volver a añadirlos pero juntos en un nuevo nodo
+    p0 = p_copia.pop(elem0)
+    p1 = p_copia.pop(elem1)
+    p_copia[elem0 + elem1] = p0 + p1
 
     # Parte recursiva
     codigo = Huffman(p_copia)
-    ca1a2 = codigo.pop(elem0 + elem1)
-    codigo[elem0], codigo[elem1] = ca1a2 + '0', ca1a2 + '1'
+    codigoAux = codigo.pop(elem0 + elem1)
+    codigo[elem0], codigo[elem1] = codigoAux + '0', codigoAux + '1'
 
     return codigo
 
@@ -118,8 +124,8 @@ def Ddp(frecuencias):
 def EncodeHuffman(mensaje_a_codificar):
     frecuencias = tablaFrecuencias(mensaje_a_codificar)
     ddp = Ddp(frecuencias)
-    l = MapToList(ddp)
-    m2c = Huffman(l) #habrá que darle el mismo formato a 'm2c' que el usado en las funciones anteriores
+    #l = MapToList(ddp)
+    m2c = Huffman(ddp) #habrá que darle el mismo formato a 'm2c' que el usado en las funciones anteriores
     mensaje_codificado = Encode(mensaje_a_codificar, m2c)
     return mensaje_codificado, m2c
 
@@ -145,6 +151,8 @@ Ejemplo
 mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte. En las calles no había más ruido que el rumor estridente de los remolinos de polvo, trapos, pajas y papeles que iban de arroyo en arroyo, de acera en acera, de esquina en esquina revolando y persiguiéndose, como mariposas que se buscan y huyen y que el aire envuelve en sus pliegues invisibles. Cual turbas de pilluelos, aquellas migajas de la basura, aquellas sobras de todo se juntaban en un montón, parábanse como dormidas un momento y brincaban de nuevo sobresaltadas, dispersándose, trepando unas por las paredes hasta los cristales temblorosos de los faroles, otras hasta los carteles de papel mal pegado a las esquinas, y había pluma que llegaba a un tercer piso, y arenilla que se incrustaba para días, o para años, en la vidriera de un escaparate, agarrada a un plomo. Vetusta, la muy noble y leal ciudad, corte en lejano siglo, hacía la digestión del cocido y de la olla podrida, y descansaba oyendo entre sueños el monótono y familiar zumbido de la campana de coro, que retumbaba allá en lo alto de la esbeltatorre en la Santa Basílica. La torre de la catedral, poema romántico de piedra,delicado himno, de dulces líneas de belleza muda y perenne, era obra del siglo diez y seis, aunque antes comenzada, de estilo gótico, pero, cabe decir, moderado por uninstinto de prudencia y armonía que modificaba las vulgares exageraciones de estaarquitectura. La vista no se fatigaba contemplando horas y horas aquel índice depiedra que señalaba al cielo; no era una de esas torres cuya aguja se quiebra desutil, más flacas que esbeltas, amaneradas, como señoritas cursis que aprietandemasiado el corsé; era maciza sin perder nada de su espiritual grandeza, y hasta sussegundos corredores, elegante balaustrada, subía como fuerte castillo, lanzándosedesde allí en pirámide de ángulo gracioso, inimitable en sus medidas y proporciones.Como haz de músculos y nervios la piedra enroscándose en la piedra trepaba a la altura, haciendo equilibrios de acróbata en el aire; y como prodigio de juegosmalabares, en una punta de caliza se mantenía, cual imantada, una bola grande debronce dorado, y encima otra más pequenya, y sobre ésta una cruz de hierro que acababaen pararrayos.'
 
 mensaje_codificado, m2c=EncodeHuffman(mensaje)
+print(m2c)
+print(mensaje_codificado)
 """
 ¡ATENCIÓN: m2c NO ES ÚNICO!
 m2c={'o': '1110', 'v': '11011101', 'c': '11111', 'j': '00001110', ';': '1011011101', 'u': '11010', 'V': '101101110011', 'r': '0010', 'b': '101110', 'á': '11011001', 'E': '1101111111', 'x': '101101110010', 'g': '1101101', 's': '1100', 'S': '1101111110', 'ó': '110111001', 'e': '011', 'B': '11011111000', 'm': '00000', 'l': '0011', ',': '101111', 'z': '11011000', ' ': '100', 'd': '10101', 'p': '101100', 'L': '1011011111', 'í': '10110110', 'C': '1101111101', 'q': '1011010', 'N': '11011111001', '.': '11011110', 'i': '10100', 'a': '010', 'y': '000010', 'ñ': '110111000', 'ú': '10110111000', 't': '11110', 'h': '0000110', 'é': '1011011110', 'n': '0001', 'f': '00001111'}

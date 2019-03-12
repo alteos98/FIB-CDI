@@ -11,27 +11,13 @@
 Dada una distribucion de probabilidad, hallar un código de Huffman asociado
 '''
 
-def MapToList(p):
-    l = []
-    for x in p:
-        elem = [p[x], [x]]
-        l.append(elem)
-    return l
-
-def getKey(item):
-    return item[0]
-
-# https://docs.python.org/3/library/heapq.html
 def Huffman(p):
     # Caso base
     # Cuando solo nos quedan dos elementos, a uno se le asignas un 0 y al otro un 1 en el árbol
     if (len(p) == 2):
         return dict(zip(p.keys(), ['0', '1']))
     
-    # Ordenamos y seleccionamos los dos elementos con menor frecuencia
-    #sorted(p, key=getKey)
     p_copia = p.copy()
-    # Falta ordenar bien
     # Pasamos el diccionario a lista, entonces ordenamos y seleccionamos los dos nodos con menor frecuencia
     sorted_p = list(p_copia.items())
     sorted_p.sort(key=lambda tup: tup[1])
@@ -125,7 +111,6 @@ def Ddp(frecuencias):
 def EncodeHuffman(mensaje_a_codificar):
     frecuencias = tablaFrecuencias(mensaje_a_codificar)
     ddp = Ddp(frecuencias)
-    #l = MapToList(ddp)
     m2c = Huffman(ddp) #habrá que darle el mismo formato a 'm2c' que el usado en las funciones anteriores
     mensaje_codificado = Encode(mensaje_a_codificar, m2c)
     return mensaje_codificado, m2c
@@ -149,8 +134,8 @@ def DecodeHuffman(mensaje_codificado,m2c):
 """
 Ejemplo
 """
-#mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte. En las calles no había más ruido que el rumor estridente de los remolinos de polvo, trapos, pajas y papeles que iban de arroyo en arroyo, de acera en acera, de esquina en esquina revolando y persiguiéndose, como mariposas que se buscan y huyen y que el aire envuelve en sus pliegues invisibles. Cual turbas de pilluelos, aquellas migajas de la basura, aquellas sobras de todo se juntaban en un montón, parábanse como dormidas un momento y brincaban de nuevo sobresaltadas, dispersándose, trepando unas por las paredes hasta los cristales temblorosos de los faroles, otras hasta los carteles de papel mal pegado a las esquinas, y había pluma que llegaba a un tercer piso, y arenilla que se incrustaba para días, o para años, en la vidriera de un escaparate, agarrada a un plomo. Vetusta, la muy noble y leal ciudad, corte en lejano siglo, hacía la digestión del cocido y de la olla podrida, y descansaba oyendo entre sueños el monótono y familiar zumbido de la campana de coro, que retumbaba allá en lo alto de la esbeltatorre en la Santa Basílica. La torre de la catedral, poema romántico de piedra,delicado himno, de dulces líneas de belleza muda y perenne, era obra del siglo diez y seis, aunque antes comenzada, de estilo gótico, pero, cabe decir, moderado por uninstinto de prudencia y armonía que modificaba las vulgares exageraciones de estaarquitectura. La vista no se fatigaba contemplando horas y horas aquel índice depiedra que señalaba al cielo; no era una de esas torres cuya aguja se quiebra desutil, más flacas que esbeltas, amaneradas, como señoritas cursis que aprietandemasiado el corsé; era maciza sin perder nada de su espiritual grandeza, y hasta sussegundos corredores, elegante balaustrada, subía como fuerte castillo, lanzándosedesde allí en pirámide de ángulo gracioso, inimitable en sus medidas y proporciones.Como haz de músculos y nervios la piedra enroscándose en la piedra trepaba a la altura, haciendo equilibrios de acróbata en el aire; y como prodigio de juegosmalabares, en una punta de caliza se mantenía, cual imantada, una bola grande debronce dorado, y encima otra más pequenya, y sobre ésta una cruz de hierro que acababaen pararrayos.'
-mensaje = 'aabbcca'
+mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte. En las calles no había más ruido que el rumor estridente de los remolinos de polvo, trapos, pajas y papeles que iban de arroyo en arroyo, de acera en acera, de esquina en esquina revolando y persiguiéndose, como mariposas que se buscan y huyen y que el aire envuelve en sus pliegues invisibles. Cual turbas de pilluelos, aquellas migajas de la basura, aquellas sobras de todo se juntaban en un montón, parábanse como dormidas un momento y brincaban de nuevo sobresaltadas, dispersándose, trepando unas por las paredes hasta los cristales temblorosos de los faroles, otras hasta los carteles de papel mal pegado a las esquinas, y había pluma que llegaba a un tercer piso, y arenilla que se incrustaba para días, o para años, en la vidriera de un escaparate, agarrada a un plomo. Vetusta, la muy noble y leal ciudad, corte en lejano siglo, hacía la digestión del cocido y de la olla podrida, y descansaba oyendo entre sueños el monótono y familiar zumbido de la campana de coro, que retumbaba allá en lo alto de la esbeltatorre en la Santa Basílica. La torre de la catedral, poema romántico de piedra,delicado himno, de dulces líneas de belleza muda y perenne, era obra del siglo diez y seis, aunque antes comenzada, de estilo gótico, pero, cabe decir, moderado por uninstinto de prudencia y armonía que modificaba las vulgares exageraciones de estaarquitectura. La vista no se fatigaba contemplando horas y horas aquel índice depiedra que señalaba al cielo; no era una de esas torres cuya aguja se quiebra desutil, más flacas que esbeltas, amaneradas, como señoritas cursis que aprietandemasiado el corsé; era maciza sin perder nada de su espiritual grandeza, y hasta sussegundos corredores, elegante balaustrada, subía como fuerte castillo, lanzándosedesde allí en pirámide de ángulo gracioso, inimitable en sus medidas y proporciones.Como haz de músculos y nervios la piedra enroscándose en la piedra trepaba a la altura, haciendo equilibrios de acróbata en el aire; y como prodigio de juegosmalabares, en una punta de caliza se mantenía, cual imantada, una bola grande debronce dorado, y encima otra más pequenya, y sobre ésta una cruz de hierro que acababaen pararrayos.'
+#mensaje = 'aabbcca'
 
 mensaje_codificado, m2c=EncodeHuffman(mensaje)
 print(tablaFrecuencias(mensaje))
@@ -165,14 +150,21 @@ mensaje_codificado='101101111101010000001100110010111010100111110101001111110100
 
 
 #%%
-'''
+"""
 Si no tenemos en cuenta la memoria necesaria para almacenar el diccionario, 
 ¿cuál es la ratio de compresión?
+"""
+lMensaje = len(mensaje)
+lMensajeCodificado = len(mensaje_codificado)
+ratioCompresion = lMensaje / lMensajeCodificado
+print(lMensaje)
+print(lMensajeCodificado)
+print(ratioCompresion)
 
+"""
 Si tenemos en cuenta la memoria necesaria para almacenar el diccionario, 
 haz una estimación de la ratio de compresión.
-
-'''
+"""
 
 
 

@@ -77,9 +77,10 @@ for i in range(len(p)):
     d[chr(i)] = p[i]
 #print(d)
 m2c = Huffman(d)
-print(m2c)
+print("Codigo asociado: ", m2c)
 print("Entropia: ", H1(p))
 print("Longitud media: ", LongitudMedia(m2c,p))
+print()
 
 
 #%%----------------------------------------------------
@@ -156,7 +157,7 @@ mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso
 mensaje_codificado, m2c = EncodeHuffman(mensaje)
 print("Tabla de frecuencias: ", tablaFrecuencias(mensaje))
 print("Codigo asociado: ", m2c)
-#print("Mensaje codificado: ", mensaje_codificado)
+print("Mensaje codificado: ", mensaje_codificado)
 """
 ¡ATENCIÓN: m2c NO ES ÚNICO!
 m2c={'o': '1110', 'v': '11011101', 'c': '11111', 'j': '00001110', ';': '1011011101', 'u': '11010', 'V': '101101110011', 'r': '0010', 'b': '101110', 'á': '11011001', 'E': '1101111111', 'x': '101101110010', 'g': '1101101', 's': '1100', 'S': '1101111110', 'ó': '110111001', 'e': '011', 'B': '11011111000', 'm': '00000', 'l': '0011', ',': '101111', 'z': '11011000', ' ': '100', 'd': '10101', 'p': '101100', 'L': '1011011111', 'í': '10110110', 'C': '1101111101', 'q': '1011010', 'N': '11011111001', '.': '11011110', 'i': '10100', 'a': '010', 'y': '000010', 'ñ': '110111000', 'ú': '10110111000', 't': '11110', 'h': '0000110', 'é': '1011011110', 'n': '0001', 'f': '00001111'}

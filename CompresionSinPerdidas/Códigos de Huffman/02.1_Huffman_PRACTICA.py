@@ -181,3 +181,10 @@ print("Ratio de compresion: ", ratioCompresion)
 Si tenemos en cuenta la memoria necesaria para almacenar el diccionario, 
 haz una estimación de la ratio de compresión.
 """
+bitsPerChar = 8
+bitsOfSymbols = bitsPerChar * len(m2c)
+s = 0
+for x in m2c:
+    s += len(m2c[x])
+print("Memoria del diccionario: ", s + bitsOfSymbols)
+print("Estimacion del ratio de compresion: ", lMensaje / (lMensajeCodificado + s + bitsOfSymbols))

@@ -32,6 +32,17 @@ def calculoR(frecuencias):
 
 def check_reescalado_e1():
 	
+def  check_reescalado_e2():
+def check_reescalado_e3(l_initial,u_initial,l,u):
+	if((0 <= l or l >= l_initial/2 - 1) and (u >= (u_initial+1)/2 or u <= u_initial):
+		return True
+	return False
+
+
+def reescalado_e1():
+def reescalado_e2():
+def reescalado_e3():
+
 
 def IntegerArithmeticCode(mensaje,alfabeto,frecuencias):
 	r = calculoR(frecuencias)
@@ -43,7 +54,7 @@ def IntegerArithmeticCode(mensaje,alfabeto,frecuencias):
 			reescalado_e1()
 		elif check_reescalado_e2():
 			reescalado_e2()
-		elif check_reescalado_e3():
+		elif check_reescalado_e3(l_initial,u_initial,l,u):
 			reescalado_e3()
 		else:
 			read_symbol()

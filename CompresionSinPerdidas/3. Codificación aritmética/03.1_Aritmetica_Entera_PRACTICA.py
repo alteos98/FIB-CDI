@@ -30,13 +30,20 @@ def calculoR(frecuencias):
 			r = potencia
 	return r
 
-def check_reescalado_e1():
-	
+def check_reescalado_e1(l, u, l_initial, u_initial):
+	if l > l_initial and l < u_initial/2 and u > l_initial and u < u_initial/2:
+		return True
+	return False
+
+def check_reescalado_e2(l, u, l_initial, u_initial):
+	if l > (u_initial+1)/2 and l < u_initial+1 and u > (u_initial+1)/2 and u < u_initial+1:
+		return True
+	return False
 
 def IntegerArithmeticCode(mensaje,alfabeto,frecuencias):
 	r = calculoR(frecuencias)
-	l = 0
-	u = r - 1
+	l = l_initial = 0
+	u = u_initial = r - 1
 	mensaje_a_leer = mensaje.copy()
 	while mensaje_a_leer:
 		if check_reescalado_e1():

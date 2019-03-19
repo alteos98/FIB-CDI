@@ -19,11 +19,23 @@ El intervalo de trabajo será: [0,R), R=2**k, k menor entero tal que R>4T
 T: suma total de frecuencias
 
 """
+def calculoR(frecuencias):
+	potencia = 1
+	trobat = 0
+	r = sum(frecuencias)* 4
+	while trobat ==  0:
+		potencia = pow(potencia,2) 
+		if potencia > r:
+			trobat = 1
+			r = potencia
+	return r
+        
 
 
 def IntegerArithmeticCode(mensaje,alfabeto,frecuencias):
-    
-    
+	r = calculoR(frecuencias)
+	return r
+
 #%%
             
             
@@ -47,13 +59,12 @@ def IntegerArithmeticDecode(codigo,tamanyo_mensaje,alfabeto,frecuencias):
 
 
 #%%
-'''
+"""
 Definir una función que codifique un mensaje utilizando codificación aritmética con precisión infinita
 obtenido a partir de las frecuencias de los caracteres del mensaje.
 
 Definir otra función que decodifique los mensajes codificados con la función 
-anterior.
-'''
+anterior. """
 
 
 def EncodeArithmetic(mensaje_a_codificar):

@@ -24,16 +24,30 @@ def calculoR(frecuencias):
 	trobat = 0
 	r = sum(frecuencias)* 4
 	while trobat ==  0:
-		potencia = pow(potencia,2) 
+		potencia *= 2 
 		if potencia > r:
 			trobat = 1
 			r = potencia
 	return r
-        
 
+def check_reescalado_e1():
+	
 
 def IntegerArithmeticCode(mensaje,alfabeto,frecuencias):
 	r = calculoR(frecuencias)
+	l = 0
+	u = r - 1
+	mensaje_a_leer = mensaje.copy()
+	while mensaje_a_leer:
+		if check_reescalado_e1():
+			reescalado_e1()
+		elif check_reescalado_e2():
+			reescalado_e2()
+		elif check_reescalado_e3():
+			reescalado_e3()
+		else:
+			read_symbol()
+			mensaje_a_leer.pop(0)
 	return r
 
 #%%

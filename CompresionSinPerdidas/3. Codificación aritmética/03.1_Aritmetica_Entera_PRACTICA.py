@@ -36,12 +36,12 @@ def check_reescalado_e1(l, u, l_initial, u_initial):
 	return False
 
 def check_reescalado_e2(l, u, u_initial):
-	if l >= (u_initial+1)/2 and l < u_initial+1 and u > (u_initial+1)/2 and u < u_initial+1:
+	if l >= (u_initial)/2 and l < u_initial+1 and u > (u_initial)/2 and u < u_initial:
 		return True
 	return False
 
 def check_reescalado_e3(l, u, u_initial):
-	if l >= (u_initial+1)/4 and l < 3*(u_initial+1)/4 and u > (u_initial+1)/4 and u < 3*(u_initial+1)/4:
+	if l >= (u_initial)/4 and l < 3*(u_initial)/4 and u > (u_initial)/4 and u < 3*(u_initial)/4:
 		return True
 	return False
 
@@ -49,18 +49,18 @@ def reescalado_e1(mensaje_codificado, l_anterior, u_anterior, contador):
 	l = 2 * l_anterior
 	u = 2 * u_anterior
 	l = math.floor(l)
-	u = math.ceil(u)
+	u = math.floor(u)
 	mensaje_codificado += '0'
 	for x in range(contador):
 		mensaje_codificado += '1'
 	contador = 0
 	return l, u, contador, mensaje_codificado
 
-def reescalado_e2(mensaje_codificado, l_anterior, u_anterior, mitad_intervalo_inicial,contador):
+def reescalado_e2(mensaje_codificado, l_anterior, u_anterior, mitad_intervalo_inicial, contador):
 	l = 2 * (l_anterior - mitad_intervalo_inicial)
 	u = 2 * (u_anterior - mitad_intervalo_inicial)
 	l = math.floor(l)
-	u = math.ceil(u)
+	u = math.floor(u)
 	mensaje_codificado += '1'
 	for x in range(contador):
 		mensaje_codificado += '0'
@@ -71,33 +71,35 @@ def reescalado_e3(l_anterior, u_anterior, cuarto_intervalo_inicial, contador):
 	l = 2 * (l_anterior - cuarto_intervalo_inicial)
 	u = 2 * (u_anterior - cuarto_intervalo_inicial)
 	l = math.floor(l)
-	u = math.ceil(u)
+	u = math.floor(u)
 	contador += 1
 	return l, u, contador
 
 def read_symbol(l_anterior, u_anterior, simbolo, indice_simbolo, frecuencias, sum_frecuencias):
 	#print(indice_simbolo)
-	sumatorio_parcial_frecuencias = 0
+	sumatorio_parcial_frecuencias_l = sumatorio_parcial_frecuencias_u = 0
 	for i in range(indice_simbolo):
-		sumatorio_parcial_frecuencias += frecuencias[i]
+		sumatorio_parcial_frecuencias_l += frecuencias[i]
+	sumatorio_parcial_frecuencias_u = sumatorio_parcial_frecuencias_l + frecuencias[indice_simbolo]
+
 	dif_intervalo = u_anterior - l_anterior
-	l = l_anterior + (sumatorio_parcial_frecuencias * dif_intervalo/sum_frecuencias)
-	l = math.floor(l)
-	u = l + (frecuencias[indice_simbolo] * dif_intervalo/sum_frecuencias)
-	u = math.ceil(u)
+	l = (sumatorio_parcial_frecuencias_l * dif_intervalo/sum_frecuencias)
+	l = math.floor(l) + l_anterior
+	u = (sumatorio_parcial_frecuencias_u * dif_intervalo/sum_frecuencias)
+	u = l_anterior + math.floor(u)
 	return l, u
 
 def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
 	sum_frecuencias = sum(frecuencias)
 	r = calculateR(sum_frecuencias)
 	l = l_initial = 0
-	u = u_initial = r - 1
+	u = u_initial = r
 	contador = 0
 	mensaje_codificado = ''
 	simbolo_actual = 0
 	while simbolo_actual < len(mensaje):
-		print("Lower: " + str(l))
-		print("Upper: " + str(u))
+		#print("Lower: " + str(l))
+		#print("Upper: " + str(u))
 		if check_reescalado_e1(l, u, l_initial, u_initial):
 			l, u, contador ,mensaje_codificado = reescalado_e1(mensaje_codificado, l, u, contador)
 		elif check_reescalado_e2(l, u, u_initial):
@@ -108,19 +110,10 @@ def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
 			for indice, simbolo in enumerate(alfabeto):
 				if simbolo == mensaje[simbolo_actual]:
 					l, u = read_symbol(l, u, simbolo, indice, frecuencias, sum_frecuencias)
-					print(mensaje[simbolo_actual])
+					#print(mensaje[simbolo_actual])
 					simbolo_actual += 1
 					break
 	return mensaje_codificado
-
-
-alfabeto=['a','b','c','d']
-frecuencias=[1,10,20,300]
-mensaje='dddcabccacabadac'
-
-code = IntegerArithmeticCode(mensaje, alfabeto, frecuencias)
-print(code)
-
 
 #%%  
 """
@@ -128,19 +121,67 @@ Dada la representación binaria del número que representa un mensaje, la
 longitud del mensaje y el alfabeto con sus frecuencias 
 dar el mensaje original
 """
-           
-def IntegerArithmeticDecode(codigo,tamanyo_mensaje,alfabeto,frecuencias):
-	return 0
-    
 
+# returns the frequency value that corresponds to the next symbol
+def NextFreq(t, l, u, sumFrec):
+	return math.floor(((t - l + 1) * sumFrec - 1) / (u - l + 1))
 
-             
-            
-#%%
-       
+def Freq2Symbol(frecuencias, new_frec, alfabeto):
+	for index, frec in enumerate(frecuencias):
+		if new_frec >= frec:
+			return alfabeto[index]
+	print("Error")
 
+def SymbolIndex(symbolToEvaluate, alfabeto):
+	for index, symbol in enumerate(alfabeto):
+		if symbol == symbolToEvaluate:
+			return index
+	print("Error")
 
+def UpdateLower(l_anterior, u_anterior, sumFrec, sumFrecParcialL):
+	return l_anterior + math.floor(((u_anterior - l_anterior + 1) * sumFrecParcialL) / (sumFrec))
 
+def UpdateUpper(l_anterior, u_anterior, sumFrec, sumFrecParcialU):
+	return l_anterior + math.floor(((u_anterior - l_anterior + 1) * sumFrecParcialU) / (sumFrec)) - 1
+
+# [0, frecuencias[0], frecuencias[0]+frecuencias[1], ..., sum(frecuencias)]
+def SumaParcialFrec(frecuencias):
+	sumaParcial = []
+	sumaParcial.append(0)
+	for indice, frec in enumerate(frecuencias):
+		sumaParcial.append(sumaParcial[indice] + frec)
+	return sumaParcial
+
+def bin2dec(bin):
+	dec = 0
+	for i, x in enumerate(reversed(bin)):
+		if x == '1':
+			dec += pow(2, i)
+			print(dec)
+	return dec
+
+def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
+	mensaje_decodificado = ''
+	sumFrec = sum(frecuencias)
+	sumParcialFrec = SumaParcialFrec(frecuencias)
+	t_bin = codigo[0:tamanyo_mensaje]
+	t_dec = bin2dec(t_bin)
+	print(t_dec)
+	l = 0
+	u = pow(2, tamanyo_mensaje) - 1
+	while (len(mensaje_decodificado) < tamanyo_mensaje):
+		l_anterior = l
+		u_anterior = u
+		newFrec = NextFreq(t_dec, l, u, sumFrec)
+		print("newFrec: " + str(newFrec))
+		symbol = Freq2Symbol(frecuencias, newFrec, alfabeto)
+		symbolIndex = SymbolIndex(symbol, alfabeto)
+		mensaje_decodificado += str(symbol)
+		l = UpdateLower(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex])
+		u = UpdateUpper(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex+1])
+		print(l)
+		print(u)
+	return mensaje_decodificado
 
 #%%
 """
@@ -181,14 +222,12 @@ def DecodeArithmetic(mensaje_codificado,tamanyo_mensaje,alfabeto,frecuencias):
 #%%
 '''
 Ejemplo (!El mismo mensaje se puede codificar con varios códigos¡)
-'''
-
 
 lista_C=['010001110110000000001000000111111000000100010000000000001100000010001111001100001000000',
          '01000111011000000000100000011111100000010001000000000000110000001000111100110000100000000']
 print(lista_C[0])
 print(lista_C[1])
-'''
+
 alfabeto=['a','b','c','d']
 frecuencias=[1,10,20,300]
 mensaje='dddcabccacabadac'
@@ -231,3 +270,23 @@ print(ratio_compresion)
 if (mensaje!=mensaje_recuperado):
         print('!!!!!!!!!!!!!!  ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 """
+
+alfabeto=['a','b','c','d']
+frecuencias=[1,10,20,300]
+mensaje='dddcabccacabadac'
+lista_C=['010001110110000000001000000111111000000100010000000000001100000010001111001100001000000',
+         '01000111011000000000100000011111100000010001000000000000110000001000111100110000100000000']
+
+code = IntegerArithmeticCode(mensaje, alfabeto, frecuencias)
+
+tamanyo_mensaje = len(mensaje)
+mensaje_recuperado=DecodeArithmetic(code, tamanyo_mensaje, alfabeto, frecuencias)
+
+print("RESULTADOS:")
+
+print("1. " + code)
+print("A: " + lista_C[0])
+print("B: " + lista_C[1])
+
+print("Original: " + str(mensaje))
+print("Nuestro:  " + str(mensaje_recuperado))

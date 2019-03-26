@@ -63,9 +63,9 @@ def reescalado_e2(mensaje_codificado, l_anterior, u_anterior, mitad_intervalo_in
 	contador = 0
 	return l, u, contador, mensaje_codificado
 
-def reescalado_e3(l_anterior, u_anterior,contador):
-	l = l_anterior
-	u = u_anterior
+def reescalado_e3(l_anterior, u_anterior, cuarto_intervalo_inicial, contador):
+	l = 2 * (l_anterior - cuarto_intervalo_inicial)
+	u = 2 * (u_anterior - cuarto_intervalo_inicial)
 	contador += 1
 	return l, u, contador
 
@@ -91,15 +91,14 @@ def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
 		print("Lower: " + str(l))
 		print("Upper: " + str(u))
 		if check_reescalado_e1(l, u, l_initial, u_initial):
-			l, u, contador ,mensaje_codificado = reescalado_e1(mensaje_codificado, l, u,contador)
+			l, u, contador ,mensaje_codificado = reescalado_e1(mensaje_codificado, l, u, contador)
 		elif check_reescalado_e2(l, u, u_initial):
 			l, u, contador, mensaje_codificado = reescalado_e2(mensaje_codificado, l, u, r/2, contador)
 		elif check_reescalado_e3(l, u, u_initial):
-			l, u, contador = reescalado_e3(l, u,contador)
+			l, u, contador = reescalado_e3(l, u, r/4, contador)
 		else:
 			for indice, simbolo in enumerate(alfabeto):
 				if simbolo == mensaje[simbolo_actual]:
-					#indice -= 1
 					l, u = read_symbol(l, u, simbolo, indice, frecuencias, sum_frecuencias)
 					print(mensaje[simbolo_actual])
 					simbolo_actual += 1
@@ -201,6 +200,7 @@ Ejemplo
 #mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte. En las calles no había más ruido que el rumor estridente de los remolinos de polvo, trapos, pajas y papeles que iban de arroyo en arroyo, de acera en acera, de esquina en esquina revolando y persiguiéndose, como mariposas que se buscan y huyen y que el aire envuelve en sus pliegues invisibles. Cual turbas de pilluelos, aquellas migajas de la basura, aquellas sobras de todo se juntaban en un montón, parábanse como dormidas un momento y brincaban de nuevo sobresaltadas, dispersándose, trepando unas por las paredes hasta los cristales temblorosos de los faroles, otras hasta los carteles de papel mal pegado a las esquinas, y había pluma que llegaba a un tercer piso, y arenilla que se incrustaba para días, o para años, en la vidriera de un escaparate, agarrada a un plomo. Vetusta, la muy noble y leal ciudad, corte en lejano siglo, hacía la digestión del cocido y de la olla podrida, y descansaba oyendo entre sueños el monótono y familiar zumbido de la campana de coro, que retumbaba allá en lo alto de la esbeltatorre en la Santa Basílica. La torre de la catedral, poema romántico de piedra,delicado himno, de dulces líneas de belleza muda y perenne, era obra del siglo diez y seis, aunque antes comenzada, de estilo gótico, pero, cabe decir, moderado por uninstinto de prudencia y armonía que modificaba las vulgares exageraciones de estaarquitectura. La vista no se fatigaba contemplando horas y horas aquel índice depiedra que señalaba al cielo; no era una de esas torres cuya aguja se quiebra desutil, más flacas que esbeltas, amaneradas, como señoritas cursis que aprietandemasiado el corsé; era maciza sin perder nada de su espiritual grandeza, y hasta sussegundos corredores, elegante balaustrada, subía como fuerte castillo, lanzándosedesde allí en pirámide de ángulo gracioso, inimitable en sus medidas y proporciones.Como haz de músculos y nervios la piedra enroscándose en la piedra trepaba a la altura, haciendo equilibrios de acróbata en el aire; y como prodigio de juegosmalabares, en una punta de caliza se mantenía, cual imantada, una bola grande debronce dorado, y encima otra más pequenya, y sobre ésta una cruz de hierro que acababaen pararrayos.'
 #mensaje_codificado, alfabeto, frecuencias = EncodeArithmetic(mensaje)
 
+'''
 alfabeto=['a','b','c','d']
 frecuencias=[1,10,20,300]
 mensaje='dddcabccacabadac'
@@ -209,6 +209,7 @@ mensaje_codificado = IntegerArithmeticCode(mensaje, alfabeto, frecuencias)
 print(mensaje_codificado)
 print(alfabeto)
 print(frecuencias)
+'''
 
 """
 mensaje_recuperado=DecodeArithmetic(mensaje_codificado,len(mensaje),alfabeto,frecuencias)

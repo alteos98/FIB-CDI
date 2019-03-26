@@ -48,6 +48,8 @@ def check_reescalado_e3(l, u, u_initial):
 def reescalado_e1(mensaje_codificado, l_anterior, u_anterior, contador):
 	l = 2 * l_anterior
 	u = 2 * u_anterior
+	l = math.floor(l)
+	u = math.ceil(u)
 	mensaje_codificado += '0'
 	for x in range(contador):
 		mensaje_codificado += '1'
@@ -57,6 +59,8 @@ def reescalado_e1(mensaje_codificado, l_anterior, u_anterior, contador):
 def reescalado_e2(mensaje_codificado, l_anterior, u_anterior, mitad_intervalo_inicial,contador):
 	l = 2 * (l_anterior - mitad_intervalo_inicial)
 	u = 2 * (u_anterior - mitad_intervalo_inicial)
+	l = math.floor(l)
+	u = math.ceil(u)
 	mensaje_codificado += '1'
 	for x in range(contador):
 		mensaje_codificado += '0'
@@ -66,6 +70,8 @@ def reescalado_e2(mensaje_codificado, l_anterior, u_anterior, mitad_intervalo_in
 def reescalado_e3(l_anterior, u_anterior, cuarto_intervalo_inicial, contador):
 	l = 2 * (l_anterior - cuarto_intervalo_inicial)
 	u = 2 * (u_anterior - cuarto_intervalo_inicial)
+	l = math.floor(l)
+	u = math.ceil(u)
 	contador += 1
 	return l, u, contador
 
@@ -76,7 +82,9 @@ def read_symbol(l_anterior, u_anterior, simbolo, indice_simbolo, frecuencias, su
 		sumatorio_parcial_frecuencias += frecuencias[i]
 	dif_intervalo = u_anterior - l_anterior
 	l = l_anterior + (sumatorio_parcial_frecuencias * dif_intervalo/sum_frecuencias)
+	l = math.floor(l)
 	u = l + (frecuencias[indice_simbolo] * dif_intervalo/sum_frecuencias)
+	u = math.ceil(u)
 	return l, u
 
 def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
@@ -173,11 +181,14 @@ def DecodeArithmetic(mensaje_codificado,tamanyo_mensaje,alfabeto,frecuencias):
 #%%
 '''
 Ejemplo (!El mismo mensaje se puede codificar con varios códigos¡)
-
+'''
 
 
 lista_C=['010001110110000000001000000111111000000100010000000000001100000010001111001100001000000',
          '01000111011000000000100000011111100000010001000000000000110000001000111100110000100000000']
+print(lista_C[0])
+print(lista_C[1])
+'''
 alfabeto=['a','b','c','d']
 frecuencias=[1,10,20,300]
 mensaje='dddcabccacabadac'

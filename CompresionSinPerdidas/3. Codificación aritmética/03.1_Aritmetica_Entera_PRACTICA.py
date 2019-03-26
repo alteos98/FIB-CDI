@@ -63,12 +63,13 @@ def reescalado_e3(l_anterior, u_anterior):
 	return l, u
 
 def read_symbol(l_anterior, u_anterior, simbolo, indice_simbolo, frecuencias, sum_frecuencias):
+	#print(indice_simbolo)
 	sumatorio_parcial_frecuencias = 0
 	for i in range(indice_simbolo):
 		sumatorio_parcial_frecuencias += frecuencias[i]
 	dif_intervalo = u_anterior - l_anterior
 	l = l_anterior + (sumatorio_parcial_frecuencias * dif_intervalo/sum_frecuencias)
-	u = l_anterior + (frecuencias[indice_simbolo] * dif_intervalo/sum_frecuencias)
+	u = l + (frecuencias[indice_simbolo] * dif_intervalo/sum_frecuencias)
 	return l, u
 
 def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
@@ -79,6 +80,8 @@ def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
 	mensaje_codificado = ''
 	simbolo_actual = 0
 	while simbolo_actual < len(mensaje):
+		print("Lower: " + str(l))
+		print("Upper: " + str(u))
 		if check_reescalado_e1(l, u, l_initial, u_initial):
 			l, u, mensaje_codificado = reescalado_e1(mensaje_codificado, l, u)
 		elif check_reescalado_e2(l, u, u_initial):
@@ -88,7 +91,9 @@ def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
 		else:
 			for indice, simbolo in enumerate(alfabeto):
 				if simbolo == mensaje[simbolo_actual]:
+					#indice -= 1
 					l, u = read_symbol(l, u, simbolo, indice, frecuencias, sum_frecuencias)
+					print(mensaje[simbolo_actual])
 					simbolo_actual += 1
 					break
 	return mensaje_codificado

@@ -128,7 +128,7 @@ def NextFreq(t, l, u, sumFrec):
 
 def Freq2Symbol(frecuencias, new_frec, alfabeto):
 	for index, frec in enumerate(frecuencias):
-		if new_frec >= frec:
+		if new_frec < frec:
 			return alfabeto[index]
 	print("Error")
 
@@ -157,30 +157,89 @@ def bin2dec(bin):
 	for i, x in enumerate(reversed(bin)):
 		if x == '1':
 			dec += pow(2, i)
-			print(dec)
+			#print(dec)
 	return dec
+
+def SameMSB(l, u):
+	if l[0] == u[0]:
+		return True
+	else:
+		return False
+
+def ShiftLeft(c):
+	return c[1:]
+
+## complementa el bit de mayor peso
+def ComplementMSB(c):
+	aux = list(c)
+	if aux[0] == '0':
+		aux[1] = '1'
+	else:
+		aux[1] = '0'
+	s = ''.join(aux)
+	print(s)
+	return s
+
+## Rellena bin con ceros a la izquierda hasta que tiene longitud nElem
+def fillBin(bin, nElem):
+	binR = list(reversed(bin[2:]))
+	while len(binR) < nElem:
+		binR += '0'
+	return list(reversed(binR))
 
 def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
 	mensaje_decodificado = ''
 	sumFrec = sum(frecuencias)
 	sumParcialFrec = SumaParcialFrec(frecuencias)
 	t_bin = codigo[0:tamanyo_mensaje]
-	t_dec = bin2dec(t_bin)
-	print(t_dec)
+	t = bin2dec(t_bin)
+	print(fillBin(bin(t), tamanyo_mensaje))
 	l = 0
-	u = pow(2, tamanyo_mensaje) - 1
+	u = u_inicial = pow(2, tamanyo_mensaje) - 1
+	desfase = 0
 	while (len(mensaje_decodificado) < tamanyo_mensaje):
 		l_anterior = l
 		u_anterior = u
-		newFrec = NextFreq(t_dec, l, u, sumFrec)
+		newFrec = NextFreq(t, l, u, sumFrec)
 		print("newFrec: " + str(newFrec))
 		symbol = Freq2Symbol(frecuencias, newFrec, alfabeto)
 		symbolIndex = SymbolIndex(symbol, alfabeto)
 		mensaje_decodificado += str(symbol)
+		print(mensaje_decodificado)
 		l = UpdateLower(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex])
 		u = UpdateUpper(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex+1])
+		l_bin = fillBin(bin(l), tamanyo_mensaje)
+		u_bin = fillBin(bin(u), tamanyo_mensaje)
 		print(l)
 		print(u)
+		while (SameMSB(l_bin, u_bin) or check_reescalado_e3(l, u, u_inicial)):
+			if SameMSB(l_bin, u_bin):
+				l_bin = ShiftLeft(l_bin)
+				l_bin += '0'
+				l = bin2dec(l_bin)
+				u_bin = ShiftLeft(u_bin)
+				u_bin += '1'
+				u = bin2dec(u_bin)
+				print(t_bin)
+				t_bin = ShiftLeft(t_bin)
+				t_bin += codigo[tamanyo_mensaje + desfase]
+				print(t_bin)
+				t = bin2dec(t_bin)
+				desfase += 1
+			if check_reescalado_e3(l, u, u_inicial):
+				l_bin = ShiftLeft(l_bin)
+				l_bin += '0'
+				u_bin = ShiftLeft(u_bin)
+				u_bin += '1'
+				t_bin = ShiftLeft(t_bin)
+				t_bin += codigo[tamanyo_mensaje + desfase]
+				desfase += 1
+				l_bin = ComplementMSB(l_bin)
+				u_bin = ComplementMSB(u_bin)
+				t_bin = ComplementMSB(t_bin)
+				l = bin2dec(l_bin)
+				u = bin2dec(u_bin)
+				t = bin2dec(t_bin)
 	return mensaje_decodificado
 
 #%%
@@ -270,7 +329,6 @@ print(ratio_compresion)
 if (mensaje!=mensaje_recuperado):
         print('!!!!!!!!!!!!!!  ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 """
-
 alfabeto=['a','b','c','d']
 frecuencias=[1,10,20,300]
 mensaje='dddcabccacabadac'

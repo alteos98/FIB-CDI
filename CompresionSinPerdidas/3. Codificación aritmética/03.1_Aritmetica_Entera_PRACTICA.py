@@ -45,22 +45,29 @@ def check_reescalado_e3(l, u, u_initial):
 		return True
 	return False
 
-def reescalado_e1(mensaje_codificado, l_anterior, u_anterior):
+def reescalado_e1(mensaje_codificado, l_anterior, u_anterior, contador):
 	l = 2 * l_anterior
 	u = 2 * u_anterior
 	mensaje_codificado += '0'
-	return l, u, mensaje_codificado
+	for x in range(contador):
+		mensaje_codificado += '1'
+	contador = 0
+	return l, u, contador, mensaje_codificado
 
-def reescalado_e2(mensaje_codificado, l_anterior, u_anterior, mitad_intervalo_inicial):
+def reescalado_e2(mensaje_codificado, l_anterior, u_anterior, mitad_intervalo_inicial,contador):
 	l = 2 * (l_anterior - mitad_intervalo_inicial)
 	u = 2 * (u_anterior - mitad_intervalo_inicial)
 	mensaje_codificado += '1'
-	return l, u, mensaje_codificado
+	for x in range(contador):
+		mensaje_codificado += '0'
+	contador = 0
+	return l, u, contador, mensaje_codificado
 
-def reescalado_e3(l_anterior, u_anterior):
+def reescalado_e3(l_anterior, u_anterior,contador):
 	l = l_anterior
 	u = u_anterior
-	return l, u
+	contador += 1
+	return l, u, contador
 
 def read_symbol(l_anterior, u_anterior, simbolo, indice_simbolo, frecuencias, sum_frecuencias):
 	sumatorio_parcial_frecuencias = 0
@@ -68,7 +75,7 @@ def read_symbol(l_anterior, u_anterior, simbolo, indice_simbolo, frecuencias, su
 		sumatorio_parcial_frecuencias += frecuencias[i]
 	dif_intervalo = u_anterior - l_anterior
 	l = l_anterior + (sumatorio_parcial_frecuencias * dif_intervalo/sum_frecuencias)
-	u = l_anterior + (frecuencias[indice_simbolo] * dif_intervalo/sum_frecuencias)
+	u = l + (frecuencias[indice_simbolo] * dif_intervalo/sum_frecuencias)
 	return l, u
 
 def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
@@ -76,15 +83,16 @@ def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
 	r = calculateR(sum_frecuencias)
 	l = l_initial = 0
 	u = u_initial = r - 1
+	contador = 0
 	mensaje_codificado = ''
 	simbolo_actual = 0
 	while simbolo_actual < len(mensaje):
 		if check_reescalado_e1(l, u, l_initial, u_initial):
-			l, u, mensaje_codificado = reescalado_e1(mensaje_codificado, l, u)
+			l, u, contador ,mensaje_codificado = reescalado_e1(mensaje_codificado, l, u,contador)
 		elif check_reescalado_e2(l, u, u_initial):
-			l, u, mensaje_codificado = reescalado_e2(mensaje_codificado, l, u, r/2)
-		#elif check_reescalado_e3(l, u, u_initial):
-			#l, u = reescalado_e3(l, u)
+			l, u, contador, mensaje_codificado = reescalado_e2(mensaje_codificado, l, u, r/2, contador)
+		elif check_reescalado_e3(l, u, u_initial):
+			l, u, contador = reescalado_e3(l, u,contador)
 		else:
 			for indice, simbolo in enumerate(alfabeto):
 				if simbolo == mensaje[simbolo_actual]:
@@ -93,14 +101,14 @@ def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
 					break
 	return mensaje_codificado
 
-"""
+
 alfabeto=['a','b','c','d']
 frecuencias=[1,10,20,300]
 mensaje='dddcabccacabadac'
 
 code = IntegerArithmeticCode(mensaje, alfabeto, frecuencias)
 print(code)
-"""
+
 
 #%%  
 """

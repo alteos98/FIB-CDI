@@ -189,6 +189,7 @@ def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
 	sumParcialFrec = SumaParcialFrec(frecuencias)
 	t_bin = codigo[0:tamanyo_mensaje]
 	t = bin2dec(t_bin)
+	print(t_bin)
 	print(fillBin(bin(t), tamanyo_mensaje))
 	l = 0
 	u = u_inicial = pow(2, tamanyo_mensaje) - 1

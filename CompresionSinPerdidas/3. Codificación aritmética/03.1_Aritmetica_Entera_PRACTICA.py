@@ -31,17 +31,17 @@ def calculateR(sum_frecuencias):
 	return r
 
 def check_reescalado_e1(l, u, l_initial, u_initial):
-	if l >= l_initial and l < u_initial/2 and u > l_initial and u < u_initial/2:
+	if l >= l_initial and l < u_initial/2 and u >= l_initial and u < u_initial/2:
 		return True
 	return False
 
 def check_reescalado_e2(l, u, u_initial):
-	if l >= (u_initial)/2 and l < u_initial+1 and u > (u_initial)/2 and u < u_initial:
+	if l >= (u_initial)/2 and l < u_initial and u >= (u_initial)/2 and u < u_initial:
 		return True
 	return False
 
 def check_reescalado_e3(l, u, u_initial):
-	if l >= (u_initial)/4 and l < 3*(u_initial)/4 and u > (u_initial)/4 and u < 3*(u_initial)/4:
+	if l >= (u_initial)/4 and l < 3*(u_initial)/4 and u >= (u_initial)/4 and u < 3*(u_initial)/4:
 		return True
 	return False
 
@@ -129,13 +129,9 @@ def NextFreq(t, l, u, sumFrec):
 def Freq2Symbol(frecuencias, new_frec, alfabeto):
 	for index, frec in enumerate(frecuencias):
 		if new_frec < frec:
-			return alfabeto[index]
-	print("Error")
-
-def SymbolIndex(symbolToEvaluate, alfabeto):
-	for index, symbol in enumerate(alfabeto):
-		if symbol == symbolToEvaluate:
-			return index
+			print(alfabeto[index-1])
+			print(index)
+			return alfabeto[index-1], index-1
 	print("Error")
 
 def UpdateLower(l_anterior, u_anterior, sumFrec, sumFrecParcialL):
@@ -152,12 +148,11 @@ def SumaParcialFrec(frecuencias):
 		sumaParcial.append(sumaParcial[indice] + frec)
 	return sumaParcial
 
-def bin2dec(bin):
+def bin2dec(binario):
 	dec = 0
-	for i, x in enumerate(reversed(bin)):
+	for i, x in enumerate(reversed(binario)):
 		if x == '1':
 			dec += pow(2, i)
-			#print(dec)
 	return dec
 
 def SameMSB(l, u):
@@ -173,19 +168,20 @@ def ShiftLeft(c):
 def ComplementMSB(c):
 	aux = list(c)
 	if aux[0] == '0':
-		aux[1] = '1'
+		aux[0] = '1'
 	else:
-		aux[1] = '0'
+		aux[0] = '0'
 	s = ''.join(aux)
-	print(s)
+	#print(s)
 	return s
 
 ## Rellena bin con ceros a la izquierda hasta que tiene longitud nElem
-def fillBin(bin, nElem):
-	binR = list(reversed(bin[2:]))
+def fillBin(binario, nElem):
+	binR = list(reversed(binario[2:]))
 	while len(binR) < nElem:
 		binR += '0'
-	return list(reversed(binR))
+	s = ''.join(list(reversed(binR)))
+	return s
 
 def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
 	mensaje_decodificado = ''
@@ -202,31 +198,40 @@ def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
 		u_anterior = u
 		newFrec = NextFreq(t, l, u, sumFrec)
 		print("newFrec: " + str(newFrec))
-		symbol = Freq2Symbol(frecuencias, newFrec, alfabeto)
-		symbolIndex = SymbolIndex(symbol, alfabeto)
+		symbol, symbolIndex = Freq2Symbol(sumParcialFrec, newFrec, alfabeto)
 		mensaje_decodificado += str(symbol)
-		print(mensaje_decodificado)
+		#print(mensaje_decodificado)
+		print(l)
+		print(u)
 		l = UpdateLower(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex])
 		u = UpdateUpper(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex+1])
 		l_bin = fillBin(bin(l), tamanyo_mensaje)
 		u_bin = fillBin(bin(u), tamanyo_mensaje)
 		print(l)
 		print(u)
-		while (SameMSB(l_bin, u_bin) or check_reescalado_e3(l, u, u_inicial)):
+		while (SameMSB(l_bin, u_bin) or check_reescalado_e3(l, u, u_inicial+1)):
 			if SameMSB(l_bin, u_bin):
+				print('SameMSB')
+				#print('Antes sameMSB: ' + str(l))
+				#print('Antes sameMSB: ' + str(u))
+				#print(l)
+				#print(u)
 				l_bin = ShiftLeft(l_bin)
 				l_bin += '0'
 				l = bin2dec(l_bin)
 				u_bin = ShiftLeft(u_bin)
 				u_bin += '1'
 				u = bin2dec(u_bin)
-				print(t_bin)
 				t_bin = ShiftLeft(t_bin)
 				t_bin += codigo[tamanyo_mensaje + desfase]
-				print(t_bin)
 				t = bin2dec(t_bin)
 				desfase += 1
-			if check_reescalado_e3(l, u, u_inicial):
+				#print('Despues sameMSB: ' + str(l))
+				#print('Despues sameMSB: ' + str(u))
+			if check_reescalado_e3(l, u, u_inicial+1):
+				print('reescalado e3')
+				#print('Antes e3: ' + str(l))
+				#print('Antes e3: ' + str(u))
 				l_bin = ShiftLeft(l_bin)
 				l_bin += '0'
 				u_bin = ShiftLeft(u_bin)
@@ -237,9 +242,13 @@ def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
 				l_bin = ComplementMSB(l_bin)
 				u_bin = ComplementMSB(u_bin)
 				t_bin = ComplementMSB(t_bin)
+				#print(l_bin)
+				#print(u_bin)
 				l = bin2dec(l_bin)
 				u = bin2dec(u_bin)
 				t = bin2dec(t_bin)
+				#print('Despues e3: ' + str(l))
+				#print('Despues e3: ' + str(u))
 	return mensaje_decodificado
 
 #%%

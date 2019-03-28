@@ -187,12 +187,20 @@ def fillBin(binario, nElem):
 	s = ''.join(list(reversed(binR)))
 	return s
 
+# dado el sumatorio de frecuencias, devuelve el número mínimo
+# de bits necesarios para representar ese valor
+def calculateM(sumFrec):
+	# falta calcular bien esto
+	# m = math.ceil(math.sqrt(sumFrec))
+	m = 9
+	return m
+
 def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
 	# Inicializaciones
 	mensaje_decodificado = ''
 	sumFrec = sum(frecuencias)
 	sumParcialFrec = SumaParcialFrec(frecuencias)
-	m = math.ceil(math.sqrt(sumFrec))
+	m = calculateM(sumFrec)
 	t_bin = codigo[0:m]
 	t = bin2dec(t_bin)
 	l = 0
@@ -346,7 +354,7 @@ if (mensaje!=mensaje_recuperado):
         print('!!!!!!!!!!!!!!  ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 """
 
-'''
+
 alfabeto=['a','b','c','d']
 frecuencias=[1,10,20,300]
 mensaje='dddcabccacabadac'
@@ -379,3 +387,4 @@ mensaje_recuperado=DecodeArithmetic(code, tamanyo_mensaje, alfabeto, frecuencias
 
 print("Original: " + str(mensaje))
 print("Nuestro:  " + str(mensaje_recuperado))
+'''

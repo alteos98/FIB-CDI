@@ -7,18 +7,10 @@ import math
 import random
 
 
+'''
+Funciones auxiliares
+'''
 
-
-#%%
-"""
-Dado un mensaje y su alfabeto con sus frecuencias dar el código 
-que representa el mensaje utilizando precisión infinita (reescalado)
-
-El intervalo de trabajo será: [0,R), R=2**k, k menor entero tal que R>4T
-
-T: suma total de frecuencias
-
-"""
 def calculateR(sum_frecuencias):
 	potencia = 1
 	trobat = False
@@ -89,38 +81,16 @@ def read_symbol(l_anterior, u_anterior, simbolo, indice_simbolo, frecuencias, su
 	u = l_anterior + math.floor(u)
 	return l, u
 
-def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
-	sum_frecuencias = sum(frecuencias)
-	r = calculateR(sum_frecuencias)
-	l = l_initial = 0
-	u = u_initial = r
-	contador = 0
-	mensaje_codificado = ''
-	simbolo_actual = 0
-	while simbolo_actual < len(mensaje):
-		#print("Lower: " + str(l))
-		#print("Upper: " + str(u))
-		if check_reescalado_e1(l, u, l_initial, u_initial):
-			l, u, contador ,mensaje_codificado = reescalado_e1(mensaje_codificado, l, u, contador)
-		elif check_reescalado_e2(l, u, u_initial):
-			l, u, contador, mensaje_codificado = reescalado_e2(mensaje_codificado, l, u, r/2, contador)
-		elif check_reescalado_e3(l, u, u_initial):
-			l, u, contador = reescalado_e3(l, u, r/4, contador)
-		else:
-			for indice, simbolo in enumerate(alfabeto):
-				if simbolo == mensaje[simbolo_actual]:
-					l, u = read_symbol(l, u, simbolo, indice, frecuencias, sum_frecuencias)
-					#print(mensaje[simbolo_actual])
-					simbolo_actual += 1
-					break
-	return mensaje_codificado
+def complementBit(bit):
+	if bit == '0':
+		return '1'
+	else:
+		return '0'
 
-#%%  
-"""
-Dada la representación binaria del número que representa un mensaje, la
-longitud del mensaje y el alfabeto con sus frecuencias 
-dar el mensaje original
-"""
+def findIndex(symbol, alfabeto):
+	for index, s in enumerate(alfabeto):
+		if s == symbol:
+			return index
 
 # returns the frequency value that corresponds to the next symbol
 def NextFreq(t, l, u, sumFrec):
@@ -191,6 +161,120 @@ def calculateM(sumFrec):
 		i += 1
 	m = i - 1
 	return m
+
+#%%
+"""
+Dado un mensaje y su alfabeto con sus frecuencias dar el código 
+que representa el mensaje utilizando precisión infinita (reescalado)
+
+El intervalo de trabajo será: [0,R), R=2**k, k menor entero tal que R>4T
+
+T: suma total de frecuencias
+
+"""
+
+def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
+	# Inicializaciones
+	mensaje_codificado = ''
+	sumFrec = sum(frecuencias)
+	sumParcialFrec = SumaParcialFrec(frecuencias)
+	m = calculateM(sumFrec)
+	l = 0
+	u = u_inicial = pow(2, m) - 1
+	contador_simbolo_actual = 0
+	scale3 = 0
+	l_bin = ''
+
+	while contador_simbolo_actual < len(mensaje):
+		l_anterior = l
+		u_anterior = u
+
+		# Siguiente símbolo a leer
+		symbol = mensaje[contador_simbolo_actual]
+		symbolIndex = findIndex(symbol, alfabeto)
+		contador_simbolo_actual += 1
+
+		# Actualizamos intervalo
+		l = UpdateLower(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex])
+		u = UpdateUpper(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex+1])
+		l_bin = fillBin(bin(l), m)
+		u_bin = fillBin(bin(u), m)
+
+		while (SameMSB(l_bin, u_bin) or check_reescalado_e3(l, u, u_inicial+1)):
+			if SameMSB(l_bin, u_bin):
+				b = l_bin[0]
+				mensaje_codificado += b
+
+				l_bin = ShiftLeft(l_bin)
+				u_bin = ShiftLeft(u_bin)
+
+				l_bin += '0'
+				u_bin += '1'
+
+				l = bin2dec(l_bin)
+				u = bin2dec(u_bin)
+
+				while scale3 > 0:
+					mensaje_codificado += complementBit(b)
+					scale3 -= 1
+
+			if check_reescalado_e3(l, u, u_inicial+1):
+				l_bin = ShiftLeft(l_bin)
+				u_bin = ShiftLeft(u_bin)
+
+				l_bin += '0'
+				u_bin += '1'
+
+				l_bin = ComplementMSB(l_bin)
+				u_bin = ComplementMSB(u_bin)
+
+				l = bin2dec(l_bin)
+				u = bin2dec(u_bin)
+
+				scale3 += 1
+
+	# Enviar final
+	# Página 106 del pdf (último párrafo)
+	#print(l_bin)
+	#print(scale3)
+	#mensaje_codificado += l_bin[0]
+	#mensaje_codificado += bin(scale3)[2:]
+	#mensaje_codificado += l_bin[1:]
+
+	return mensaje_codificado
+
+def IntegerArithmeticCode2(mensaje, alfabeto, frecuencias):
+	sum_frecuencias = sum(frecuencias)
+	r = calculateR(sum_frecuencias)
+	l = l_initial = 0
+	u = u_initial = r
+	contador = 0
+	mensaje_codificado = ''
+	simbolo_actual = 0
+	while simbolo_actual < len(mensaje):
+		#print("Lower: " + str(l))
+		#print("Upper: " + str(u))
+		if check_reescalado_e1(l, u, l_initial, u_initial):
+			l, u, contador ,mensaje_codificado = reescalado_e1(mensaje_codificado, l, u, contador)
+		elif check_reescalado_e2(l, u, u_initial):
+			l, u, contador, mensaje_codificado = reescalado_e2(mensaje_codificado, l, u, r/2, contador)
+		elif check_reescalado_e3(l, u, u_initial):
+			l, u, contador = reescalado_e3(l, u, r/4, contador)
+		else:
+			for indice, simbolo in enumerate(alfabeto):
+				if simbolo == mensaje[simbolo_actual]:
+					l, u = read_symbol(l, u, simbolo, indice, frecuencias, sum_frecuencias)
+					#print(mensaje[simbolo_actual])
+					simbolo_actual += 1
+					break
+	return mensaje_codificado
+
+#%%  
+"""
+Dada la representación binaria del número que representa un mensaje, la
+longitud del mensaje y el alfabeto con sus frecuencias 
+dar el mensaje original
+"""
 
 def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
 	# Inicializaciones

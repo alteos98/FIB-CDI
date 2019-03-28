@@ -124,17 +124,11 @@ dar el mensaje original
 
 # returns the frequency value that corresponds to the next symbol
 def NextFreq(t, l, u, sumFrec):
-	print("t: " + str(t))
-	print("l: " + str(l))
-	print("u: " + str(u))
-	print("sumFrec: " + str(sumFrec))
 	return math.floor(((t - l + 1) * sumFrec - 1) / (u - l + 1))
 
 def Freq2Symbol(frecuencias, new_frec, alfabeto):
 	for index, frec in enumerate(frecuencias):
 		if new_frec < frec:
-			print(alfabeto[index-1])
-			#print(index)
 			return alfabeto[index-1], index-1
 	print("Error")
 
@@ -176,7 +170,6 @@ def ComplementMSB(c):
 	else:
 		aux[0] = '0'
 	s = ''.join(aux)
-	#print(s)
 	return s
 
 ## Rellena bin con ceros a la izquierda hasta que tiene longitud nElem
@@ -192,7 +185,11 @@ def fillBin(binario, nElem):
 def calculateM(sumFrec):
 	# falta calcular bien esto
 	# m = math.ceil(math.sqrt(sumFrec))
-	m = 9
+	i = pot = 0
+	while pot < sumFrec*4:
+		pot = pow(2, i)
+		i += 1
+	m = i - 1
 	return m
 
 def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
@@ -206,64 +203,54 @@ def IntegerArithmeticDecode(codigo, tamanyo_mensaje, alfabeto, frecuencias):
 	l = 0
 	u = u_inicial = pow(2, m) - 1
 	desfase = 0
-	#print(t_bin)
-	#print(fillBin(bin(t), tamanyo_mensaje))
+
 	while (len(mensaje_decodificado) < tamanyo_mensaje):
 		l_anterior = l
 		u_anterior = u
-		newFrec = NextFreq(t, l, u, sumFrec)
-		print("newFrec: " + str(newFrec))
-		symbol, symbolIndex = Freq2Symbol(sumParcialFrec, newFrec, alfabeto)
+
+		# Encontramos símbolo y lo añadimos al mensaje
+		symbol, symbolIndex = Freq2Symbol(sumParcialFrec, NextFreq(t, l, u, sumFrec), alfabeto)
 		mensaje_decodificado += str(symbol)
-		#print(mensaje_decodificado)
-		#print(l)
-		#print(u)
+
+		# Actualizamos intervalo
 		l = UpdateLower(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex])
 		u = UpdateUpper(l_anterior, u_anterior, sumFrec, sumParcialFrec[symbolIndex+1])
 		l_bin = fillBin(bin(l), m)
 		u_bin = fillBin(bin(u), m)
-		print(l)
-		print(u)
+
 		while (SameMSB(l_bin, u_bin) or check_reescalado_e3(l, u, u_inicial+1)):
 			if SameMSB(l_bin, u_bin):
-				print('SameMSB')
-				#print('Antes sameMSB: ' + str(l))
-				#print('Antes sameMSB: ' + str(u))
-				#print(l)
-				#print(u)
 				l_bin = ShiftLeft(l_bin)
+				u_bin = ShiftLeft(u_bin)
+				t_bin = ShiftLeft(t_bin)
+
 				l_bin += '0'
+				u_bin += '1'
+				t_bin += codigo[m + desfase]
+
 				l = bin2dec(l_bin)
-				u_bin = ShiftLeft(u_bin)
-				u_bin += '1'
 				u = bin2dec(u_bin)
-				t_bin = ShiftLeft(t_bin)
-				t_bin += codigo[m + desfase]
 				t = bin2dec(t_bin)
+
 				desfase += 1
-				#print('Despues sameMSB: ' + str(l))
-				#print('Despues sameMSB: ' + str(u))
 			if check_reescalado_e3(l, u, u_inicial+1):
-				print('reescalado e3')
-				#print('Antes e3: ' + str(l))
-				#print('Antes e3: ' + str(u))
 				l_bin = ShiftLeft(l_bin)
-				l_bin += '0'
 				u_bin = ShiftLeft(u_bin)
-				u_bin += '1'
 				t_bin = ShiftLeft(t_bin)
+
+				l_bin += '0'
+				u_bin += '1'		
 				t_bin += codigo[m + desfase]
-				desfase += 1
+
 				l_bin = ComplementMSB(l_bin)
 				u_bin = ComplementMSB(u_bin)
 				t_bin = ComplementMSB(t_bin)
-				#print(l_bin)
-				#print(u_bin)
+
 				l = bin2dec(l_bin)
 				u = bin2dec(u_bin)
 				t = bin2dec(t_bin)
-				#print('Despues e3: ' + str(l))
-				#print('Despues e3: ' + str(u))
+
+				desfase += 1
 	return mensaje_decodificado
 
 #%%
@@ -329,31 +316,8 @@ Ejemplo
 
 '''
 
-
 #mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte. En las calles no había más ruido que el rumor estridente de los remolinos de polvo, trapos, pajas y papeles que iban de arroyo en arroyo, de acera en acera, de esquina en esquina revolando y persiguiéndose, como mariposas que se buscan y huyen y que el aire envuelve en sus pliegues invisibles. Cual turbas de pilluelos, aquellas migajas de la basura, aquellas sobras de todo se juntaban en un montón, parábanse como dormidas un momento y brincaban de nuevo sobresaltadas, dispersándose, trepando unas por las paredes hasta los cristales temblorosos de los faroles, otras hasta los carteles de papel mal pegado a las esquinas, y había pluma que llegaba a un tercer piso, y arenilla que se incrustaba para días, o para años, en la vidriera de un escaparate, agarrada a un plomo. Vetusta, la muy noble y leal ciudad, corte en lejano siglo, hacía la digestión del cocido y de la olla podrida, y descansaba oyendo entre sueños el monótono y familiar zumbido de la campana de coro, que retumbaba allá en lo alto de la esbeltatorre en la Santa Basílica. La torre de la catedral, poema romántico de piedra,delicado himno, de dulces líneas de belleza muda y perenne, era obra del siglo diez y seis, aunque antes comenzada, de estilo gótico, pero, cabe decir, moderado por uninstinto de prudencia y armonía que modificaba las vulgares exageraciones de estaarquitectura. La vista no se fatigaba contemplando horas y horas aquel índice depiedra que señalaba al cielo; no era una de esas torres cuya aguja se quiebra desutil, más flacas que esbeltas, amaneradas, como señoritas cursis que aprietandemasiado el corsé; era maciza sin perder nada de su espiritual grandeza, y hasta sussegundos corredores, elegante balaustrada, subía como fuerte castillo, lanzándosedesde allí en pirámide de ángulo gracioso, inimitable en sus medidas y proporciones.Como haz de músculos y nervios la piedra enroscándose en la piedra trepaba a la altura, haciendo equilibrios de acróbata en el aire; y como prodigio de juegosmalabares, en una punta de caliza se mantenía, cual imantada, una bola grande debronce dorado, y encima otra más pequenya, y sobre ésta una cruz de hierro que acababaen pararrayos.'
 #mensaje_codificado, alfabeto, frecuencias = EncodeArithmetic(mensaje)
-
-'''
-alfabeto=['a','b','c','d']
-frecuencias=[1,10,20,300]
-mensaje='dddcabccacabadac'
-mensaje_codificado = IntegerArithmeticCode(mensaje, alfabeto, frecuencias)
-
-print(mensaje_codificado)
-print(alfabeto)
-print(frecuencias)
-'''
-
-"""
-mensaje_recuperado=DecodeArithmetic(mensaje_codificado,len(mensaje),alfabeto,frecuencias)
-
-ratio_compresion=8*len(mensaje)/len(mensaje_codificado)
-print(ratio_compresion)
-
-if (mensaje!=mensaje_recuperado):
-        print('!!!!!!!!!!!!!!  ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-"""
-
 
 alfabeto=['a','b','c','d']
 frecuencias=[1,10,20,300]
@@ -361,30 +325,24 @@ mensaje='dddcabccacabadac'
 lista_C=['010001110110000000001000000111111000000100010000000000001100000010001111001100001000000',
          '01000111011000000000100000011111100000010001000000000000110000001000111100110000100000000']
 
-code = IntegerArithmeticCode(mensaje, alfabeto, frecuencias)
+mensaje_codificado = IntegerArithmeticCode(mensaje, alfabeto, frecuencias)
 
 tamanyo_mensaje = len(mensaje)
-tamanyo_mensaje = math.ceil(math.sqrt(sum(frecuencias)))
 mensaje_recuperado=DecodeArithmetic(lista_C[0], tamanyo_mensaje, alfabeto, frecuencias)
 
-print("RESULTADOS:")
+print("ENCODE:")
 
-print("1. " + code)
-print("A: " + lista_C[0])
-print("B: " + lista_C[1])
+print("Codigo 1:       " + lista_C[0])
+print("Codigo 2:       " + lista_C[1])
+print("Nuestro codigo: " + mensaje_codificado)
+print()
 
-print("Original: " + str(mensaje))
-print("Nuestro:  " + str(mensaje_recuperado))
-'''
+print("DECODE:")
+print("Mensaje original: " + str(mensaje))
+print("Nuestro mensaje:  " + str(mensaje_recuperado))
 
-alfabeto=['1','2','3']
-frecuencias=[40,1,9]
-code = '1100010010000000'
-mensaje = '1321'
-
-tamanyo_mensaje = len(mensaje)
-mensaje_recuperado=DecodeArithmetic(code, tamanyo_mensaje, alfabeto, frecuencias)
-
-print("Original: " + str(mensaje))
-print("Nuestro:  " + str(mensaje_recuperado))
-'''
+ratio_compresion=8*len(mensaje)/len(mensaje_codificado)
+print()
+print("Ratio de compresion: " + str(ratio_compresion))
+if (mensaje!=mensaje_recuperado):
+        print('!!!!!!!!!!!!!!  ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')

@@ -68,7 +68,6 @@ def reescalado_e3(l_anterior, u_anterior, cuarto_intervalo_inicial, contador):
 	return l, u, contador
 
 def read_symbol(l_anterior, u_anterior, simbolo, indice_simbolo, frecuencias, sum_frecuencias):
-	#print(indice_simbolo)
 	sumatorio_parcial_frecuencias_l = sumatorio_parcial_frecuencias_u = 0
 	for i in range(indice_simbolo):
 		sumatorio_parcial_frecuencias_l += frecuencias[i]
@@ -123,6 +122,8 @@ def bin2dec(binario):
 			dec += pow(2, i)
 	return dec
 
+## true si el bit de mayor peso de l y u es el mismo
+## false si no
 def SameMSB(l, u):
 	if l[0] == u[0]:
 		return True
@@ -153,8 +154,6 @@ def fillBin(binario, nElem):
 # dado el sumatorio de frecuencias, devuelve el número mínimo
 # de bits necesarios para representar ese valor
 def calculateM(sumFrec):
-	# falta calcular bien esto
-	# m = math.ceil(math.sqrt(sumFrec))
 	i = pot = 0
 	while pot < sumFrec*4:
 		pot = pow(2, i)
@@ -234,40 +233,12 @@ def IntegerArithmeticCode(mensaje, alfabeto, frecuencias):
 				scale3 += 1
 
 	# Enviar final
-	# Página 106 del pdf (último párrafo)
-	#print(l_bin)
-	#print(scale3)
-	#mensaje_codificado += l_bin[0]
-	#mensaje_codificado += bin(scale3)[2:]
-	#mensaje_codificado += l_bin[1:]
+	mensaje_codificado += l_bin[0]
+	mensaje_codificado += bin(scale3)[2:]
+	mensaje_codificado += l_bin[1:]
 
 	return mensaje_codificado
 
-def IntegerArithmeticCode2(mensaje, alfabeto, frecuencias):
-	sum_frecuencias = sum(frecuencias)
-	r = calculateR(sum_frecuencias)
-	l = l_initial = 0
-	u = u_initial = r
-	contador = 0
-	mensaje_codificado = ''
-	simbolo_actual = 0
-	while simbolo_actual < len(mensaje):
-		#print("Lower: " + str(l))
-		#print("Upper: " + str(u))
-		if check_reescalado_e1(l, u, l_initial, u_initial):
-			l, u, contador ,mensaje_codificado = reescalado_e1(mensaje_codificado, l, u, contador)
-		elif check_reescalado_e2(l, u, u_initial):
-			l, u, contador, mensaje_codificado = reescalado_e2(mensaje_codificado, l, u, r/2, contador)
-		elif check_reescalado_e3(l, u, u_initial):
-			l, u, contador = reescalado_e3(l, u, r/4, contador)
-		else:
-			for indice, simbolo in enumerate(alfabeto):
-				if simbolo == mensaje[simbolo_actual]:
-					l, u = read_symbol(l, u, simbolo, indice, frecuencias, sum_frecuencias)
-					#print(mensaje[simbolo_actual])
-					simbolo_actual += 1
-					break
-	return mensaje_codificado
 
 #%%  
 """
@@ -412,7 +383,7 @@ lista_C=['0100011101100000000010000001111110000001000100000000000011000000100011
 mensaje_codificado = IntegerArithmeticCode(mensaje, alfabeto, frecuencias)
 
 tamanyo_mensaje = len(mensaje)
-mensaje_recuperado=DecodeArithmetic(lista_C[0], tamanyo_mensaje, alfabeto, frecuencias)
+mensaje_recuperado=DecodeArithmetic(mensaje_codificado, tamanyo_mensaje, alfabeto, frecuencias)
 
 print("ENCODE:")
 

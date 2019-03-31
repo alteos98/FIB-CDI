@@ -16,7 +16,17 @@ LZ77Code(mensaje,12,6)=['c', 0, 0], ['a', 0, 0],  ['b', 0, 0],
 """
 
 def LZ77Code(mensaje,S=12,L=6):
-    
+    # Inicializaciones
+    code = []
+    buffer_busqueda = []
+    buffer_lookahead = []
+    indice_simbolo_actual = 0
+    while indice_simbolo_actual < len(mensaje):
+        # encontrar cadena mas larga de buffer_lookahead
+        # que este en buffer_busqueda
+
+        # actualizar buffers e indices
+    return code
       
 """
 Dado un mensaje codificado con el algoritmo LZ77 hallar el mensaje 
@@ -29,11 +39,8 @@ LZ77Decode(code)='patadecabra'
 
 """   
 def LZ77Decode(codigo):
-
-    
-    
-    
-
+    mensaje_decodificado = ''
+    return mensaje_decodificado
 
 """
 Jugar con los valores de S y L (bits_o y bits_l)

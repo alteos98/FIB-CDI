@@ -103,3 +103,10 @@ venv.bak/
 # mypy
 .mypy_cache/
 tempCodeRunnerFile.py
+
+# vscode
+.vscode
+
+# mac
+.DS_Store
+CompresionSinPerdidas/.DS_Store

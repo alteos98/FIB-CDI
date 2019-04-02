@@ -14,18 +14,52 @@ LZ77Code(mensaje,12,6)=['c', 0, 0], ['a', 0, 0],  ['b', 0, 0],
   
 [símbolo, longitud_máxima_cadena, posición]    
 """
+'''
+def inicializar_cadena(buffer_entrada,size,length):
+buffer_salida = []
+ini = 0
+fin = 1
+indice_simbolo = 0
+while(len(buffer_salida) <= size):
+    indice_simbolo = buffer_salida.find(buffer_entrada)
 
+'''
 def LZ77Code(mensaje,S=12,L=6):
     # Inicializaciones
     code = []
-    buffer_busqueda = []
-    buffer_lookahead = []
+    ini = S
+    fin = S + L
+    caracter = ''
+    buffer_busqueda = mensaje[0:12]
+    #print("buffer " + str(buffer_busqueda))
+    buffer_lookahead = mensaje[ini:fin]
+   # print("buffer " + str(buffer_lookahead))
     indice_simbolo_actual = 0
-    while indice_simbolo_actual < len(mensaje):
+    inicializar_cadena(buffer_busqueda)
+    while():
+        while (len(buffer_lookahead) > 0):
+            indice_simbolo_actual  = buffer_busqueda.find(buffer_lookahead)
+            #print("indice " + str(indice_simbolo_actual))
+            if (indice_simbolo_actual != -1):
+                break
+            else:
+                fin = fin - 1
+                buffer_lookahead = mensaje[ini:fin]
+                #print("buffer " + str(buffer_lookahead))
+        caracter = mensaje[fin-ini]
+        if(indice_simbolo_actual == -1):
+            elemento_code = [0,0,caracter]
+
+            code = code + elemento_code
+
+    print("char " + str(caracter))
+           
+   ## print("indice " + str(indice_simbolo_actual))
         # encontrar cadena mas larga de buffer_lookahead
         # que este en buffer_busqueda
 
         # actualizar buffers e indices
+    print("code  " + str(code))
     return code
       
 """
@@ -53,7 +87,8 @@ bits_o=12
 bits_l=4
 S=2**bits_o
 L=2**bits_l
-
+mensaje_codificado=LZ77Code(mensaje,S,L)
+'''
 import time
 start_time = time.clock()
 mensaje_codificado=LZ77Code(mensaje,S,L)
@@ -64,6 +99,6 @@ print (time.clock() - start_time, "seconds decode")
 ratio_compresion=8*len(mensaje)/((bits_o+bits_l+8)*len(mensaje_codificado))
 print('Longitud de mensaje codificado:', len(mensaje_codificado))
 print('Ratio de compresión:', ratio_compresion)
-
+'''
 
 

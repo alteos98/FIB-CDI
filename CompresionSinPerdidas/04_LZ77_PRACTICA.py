@@ -18,49 +18,66 @@ algoritmo LZ77
 
 '''
 def update_buffer_busqueda(buffer_busqueda, buffer_lookahead, S, length_cadena_encontrada):
-    buffer_busqueda += buffer_lookahead[:length_cadena_encontrada]
+    _buffer_busqueda = buffer_busqueda
+    buffer_busqueda = _buffer_busqueda + buffer_lookahead[0:length_cadena_encontrada]
     diff_length_buffer_busqueda = len(buffer_busqueda) - S
     if diff_length_buffer_busqueda > 0:
         buffer_busqueda = buffer_busqueda[diff_length_buffer_busqueda:]
     return buffer_busqueda
 
 def update_buffer_lookahead(buffer_lookahead, mensaje, pointer_last_character, length_cadena_encontrada):
-    buffer_lookahead += mensaje[pointer_last_character : pointer_last_character+length_cadena_encontrada]
+    _buffer_lookahead = buffer_lookahead[length_cadena_encontrada :]
+    buffer_lookahead = _buffer_lookahead + mensaje[pointer_last_character : pointer_last_character+length_cadena_encontrada]
     return buffer_lookahead
 
 def LZ77Code(mensaje,S=12,L=6):
-    # Inicializaciones
+
+    # Inicializaciones (considerando que tratamos diferent al primer elemento)
     code = []
-    ini = 1
-    fin = L+1
-    caracter = ''
-    buffer_busqueda = mensaje[0:1]
-    elemento_code = [0,0,mensaje[0:1]]
-    code.append(elemento_code)
-    buffer_lookahead = mensaje[ini:fin]
+    ini = 0
+    fin = L
+    buffer_busqueda = mensaje[0 : 1]
+    buffer_lookahead = mensaje[1 : L+1]
     indice_simbolo_actual = 0
-    while (fin < len(mensaje)):
-        while (len(buffer_lookahead) > 0):
-            indice_simbolo_actual  = buffer_busqueda.find(buffer_lookahead)
-            print("indice " + str(indice_simbolo_actual))
+    end_lookahead = 0
+
+    ## Primer elemento
+    elemento_code = [mensaje[0:1], 0, 0]
+    code.append(elemento_code)
+
+    while (end_lookahead < len(mensaje)):
+        end_lookahead += (fin + 1)
+        fin = L
+
+        ## Busqueda en buffer_busqueda de la cadena mas larga en buffer_lookahead
+        ## empezando por buffer_lookahead[0]
+        b = False
+        while fin > 0 and not b:
+            aux_buffer_lookahead = buffer_lookahead[0 : fin]
+            indice_simbolo_actual  = buffer_busqueda.find(aux_buffer_lookahead)
             if (indice_simbolo_actual != -1):
-                break
+                b = True
             else:
-                fin = fin - 1
-                buffer_lookahead = mensaje[ini:fin]
-        caracter = mensaje[fin]
+                fin -= 1
+
+        ## Caso en que no se ha encontrado ni el primer caracter de
+        ## buffer_lookahead en buffer_busqueda
+        caracter = buffer_lookahead[fin]
         if(indice_simbolo_actual == -1):
-            elemento_code = [0,0,caracter]
+            elemento_code = [caracter, 0, 0]
             code.append(elemento_code)
         else:
-            elemento_code = [len(buffer_busqueda)-indice_simbolo_actual,fin-ini,caracter]
+            elemento_code = [caracter, fin-ini, len(buffer_busqueda)-indice_simbolo_actual]
             code.append(elemento_code)
-        fin = ini + L
-        update_buffer_busqueda(buffer_busqueda,buffer_lookahead,s,range(fin-ini))
-        update_buffer_lookahead(buffer_lookahead,mensaje,fin,range(fin-ini))
-        print("char " + str(caracter))
-            
-        print("code  " + str(code))
+        
+        ## Update
+        buffer_busqueda = update_buffer_busqueda(buffer_busqueda, buffer_lookahead, S, fin - ini + 1)
+        buffer_lookahead = update_buffer_lookahead(buffer_lookahead, mensaje, end_lookahead, fin - ini + 1)
+    
+    ## EOF
+    elemento_code = ['EOF', 0, 0]
+    code.append(elemento_code)
+
     return code
       
 '''
@@ -78,13 +95,13 @@ def LZ77Decode(codigo):
             mensaje_decodificado += tripleta[0]
     return mensaje_decodificado
 
+'''
 code=[['p', 0, 0], ['a', 0, 0],  ['t', 0, 0],  ['d', 1, 2],  ['e', 0, 0],
  ['c', 0, 0], ['b', 1, 4],  ['r', 0, 0], ['EOF', 1, 3]]
-'''
 mensaje_decodificado = LZ77Decode(code)
 print(mensaje_decodificado)
-#LZ77Decode(code)='patadecabra'
 '''
+
 """
 Jugar con los valores de S y L (bits_o y bits_l)
 para ver sus efectos (tiempo, tamaño...)
@@ -112,4 +129,9 @@ print('Ratio de compresión:', ratio_compresion)
 '''
 
 mensaje='cabracadabrarrarr'
-LZ77Code(mensaje,12,6)
+code = LZ77Code(mensaje,12,6)
+mensaje_decodificado = LZ77Decode(code)
+
+print('Mensaje original:     ' + mensaje)
+print('Code:                 ' + code)
+print('Mensaje decodificado: ' + mensaje_decodificado)

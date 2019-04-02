@@ -5,23 +5,18 @@
 Dado un mensaje, el tamaño de la ventana de trabajo L, y el tamaño
 del buffer de búsqueda S dar la codificación del mensaje usando el
 algoritmo LZ77
+"""
 
 
-mensaje='cabracadabrarrarr'
-LZ77Code(mensaje,12,6)=['c', 0, 0], ['a', 0, 0],  ['b', 0, 0],
+
+'''=['c', 0, 0], ['a', 0, 0],  ['b', 0, 0],
  ['r', 0, 0],  ['c', 1, 3],  ['d', 1, 2], ['r', 4, 7],  ['EOF', 4, 3]]
   
   
 [símbolo, longitud_máxima_cadena, posición]    
-"""
-def inicializar_cadena(buffer_entrada,size,length):
-buffer_salida = []
-ini = 0
-fin = 1
-indice_simbolo = 0
-while(len(buffer_salida) <= size):
-    indice_simbolo = buffer_salida.find(buffer_entrada)
 
+
+'''
 def update_buffer_busqueda(buffer_busqueda, buffer_lookahead, S, length_cadena_encontrada):
     buffer_busqueda += buffer_lookahead[:length_cadena_encontrada]
     diff_length_buffer_busqueda = len(buffer_busqueda) - S
@@ -36,39 +31,36 @@ def update_buffer_lookahead(buffer_lookahead, mensaje, pointer_last_character, l
 def LZ77Code(mensaje,S=12,L=6):
     # Inicializaciones
     code = []
-    ini = S
-    fin = S + L
+    ini = 1
+    fin = L+1
     caracter = ''
-    buffer_busqueda = mensaje[0:12]
-    #print("buffer " + str(buffer_busqueda))
+    buffer_busqueda = mensaje[0:1]
+    elemento_code = [0,0,mensaje[0:1]]
+    code.append(elemento_code)
     buffer_lookahead = mensaje[ini:fin]
-   # print("buffer " + str(buffer_lookahead))
     indice_simbolo_actual = 0
-    inicializar_cadena(buffer_busqueda)
-    while():
+    while (fin < len(mensaje)):
         while (len(buffer_lookahead) > 0):
             indice_simbolo_actual  = buffer_busqueda.find(buffer_lookahead)
-            #print("indice " + str(indice_simbolo_actual))
+            print("indice " + str(indice_simbolo_actual))
             if (indice_simbolo_actual != -1):
                 break
             else:
                 fin = fin - 1
                 buffer_lookahead = mensaje[ini:fin]
-                #print("buffer " + str(buffer_lookahead))
-        caracter = mensaje[fin-ini]
+        caracter = mensaje[fin]
         if(indice_simbolo_actual == -1):
             elemento_code = [0,0,caracter]
-
-            code = code + elemento_code
-
-    print("char " + str(caracter))
-           
-   ## print("indice " + str(indice_simbolo_actual))
-        # encontrar cadena mas larga de buffer_lookahead
-        # que este en buffer_busqueda
-
-        # actualizar buffers e indices
-    print("code  " + str(code))
+            code.append(elemento_code)
+        else:
+            elemento_code = [len(buffer_busqueda)-indice_simbolo_actual,fin-ini,caracter]
+            code.append(elemento_code)
+        fin = ini + L
+        update_buffer_busqueda(buffer_busqueda,buffer_lookahead,s,range(fin-ini))
+        update_buffer_lookahead(buffer_lookahead,mensaje,fin,range(fin-ini))
+        print("char " + str(caracter))
+            
+        print("code  " + str(code))
     return code
       
 '''
@@ -88,11 +80,11 @@ def LZ77Decode(codigo):
 
 code=[['p', 0, 0], ['a', 0, 0],  ['t', 0, 0],  ['d', 1, 2],  ['e', 0, 0],
  ['c', 0, 0], ['b', 1, 4],  ['r', 0, 0], ['EOF', 1, 3]]
-
+'''
 mensaje_decodificado = LZ77Decode(code)
 print(mensaje_decodificado)
 #LZ77Decode(code)='patadecabra'
-
+'''
 """
 Jugar con los valores de S y L (bits_o y bits_l)
 para ver sus efectos (tiempo, tamaño...)
@@ -106,6 +98,7 @@ S=2**bits_o
 L=2**bits_l
 mensaje_codificado=LZ77Code(mensaje,S,L)
 '''
+'''
 import time
 start_time = time.clock()
 mensaje_codificado=LZ77Code(mensaje,S,L)
@@ -116,3 +109,7 @@ print (time.clock() - start_time, "seconds decode")
 ratio_compresion=8*len(mensaje)/((bits_o+bits_l+8)*len(mensaje_codificado))
 print('Longitud de mensaje codificado:', len(mensaje_codificado))
 print('Ratio de compresión:', ratio_compresion)
+'''
+
+mensaje='cabracadabrarrarr'
+LZ77Code(mensaje,12,6)

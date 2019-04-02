@@ -5,7 +5,7 @@ Created on Tue Oct 13 11:28:56 2015
 @author: martinez
 """
 import time
-import cdi
+#import cdi
 import math
 
 #%%

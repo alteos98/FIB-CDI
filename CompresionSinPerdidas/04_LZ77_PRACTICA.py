@@ -133,5 +133,5 @@ code = LZ77Code(mensaje,12,6)
 mensaje_decodificado = LZ77Decode(code)
 
 print('Mensaje original:     ' + mensaje)
-print('Code:                 ' + code)
+print('Code:                 ' + str(code))
 print('Mensaje decodificado: ' + mensaje_decodificado)

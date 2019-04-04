@@ -16,7 +16,38 @@ LZ78Code(mensaje)=[[0, 'w'], [0, 'a'], [0, 'b'], [3, 'a'],
 """
 
 def LZ78Code(mensaje):
-
+    n=len(mensaje)
+    codigo=[]
+    diccionario=[]
+    posicion=0
+    while(posicion<n):
+        indice=0
+        l=1
+        cadena=mensaje[posicion:posicion+l]
+            
+        while True:
+            try:
+                indice=diccionario.index(cadena)+1
+                l+=1
+                if posicion+l>n: break
+                cadena=mensaje[posicion:posicion+l]
+            except:
+                break
+        posicion+=l
+        if posicion<n:
+            diccionario+=[cadena]
+                
+            codigo+=[[indice,mensaje[posicion-1]]]
+        elif posicion==n:
+            diccionario+=[cadena]
+                
+            codigo+=[[indice,mensaje[posicion-1]]]            
+            codigo+=[[0,'EOF']]
+        else:
+            diccionario+=[cadena]
+                
+            codigo+=[[indice,'EOF']]
+    return codigo 
     
 """
 Dado un mensaje codificado con el algoritmo LZ78 hallar el mensaje 
@@ -31,9 +62,29 @@ LZ78Decode(code)='mississippi mississippi river'
 """    
 
 def LZ78Decode(codigo):
+    mensaje=''
+    diccionario=[]
+    n=len(codigo)
+    for i in range(n-1):
+        indice=codigo[i][0]
+        letra=codigo[i][1]
+            
+        if indice==0:
+            mensaje+=letra
+            diccionario+=[letra]
+        else:
+            palabra=diccionario[indice-1]+letra
+            mensaje+=palabra
+            diccionario+=[palabra]  
+    indice=codigo[n-1][0]
+    letra=codigo[n-1][1]
 
-    
-    
+    if indice>0:
+        palabra=diccionario[indice-1]
+        mensaje+=palabra
+      
+    return mensaje, diccionario
+
 mensaje='wabba wabba wabba wabba woo woo woo' 
 mensaje_codificado=LZ78Code(mensaje)
 print('Código: ',mensaje_codificado)   

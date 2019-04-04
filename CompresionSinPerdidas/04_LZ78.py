@@ -32,9 +32,6 @@ def LZ78Code(mensaje,debug=False):
         indice=0
         l=1
         cadena=mensaje[posicion:posicion+l]
-        
-        if debug:
-            print(cdi.green(mensaje[:posicion])+cdi.red(mensaje[posicion:]))
             
         while True:
             try:
@@ -47,24 +44,15 @@ def LZ78Code(mensaje,debug=False):
         posicion+=l
         if posicion<n:
             diccionario+=[cadena]
-            
-            if debug:
-                print([indice,mensaje[posicion-1]],'\n',diccionario)
                 
             codigo+=[[indice,mensaje[posicion-1]]]
         elif posicion==n:
             diccionario+=[cadena]
-            
-            if debug:
-                print([indice,mensaje[posicion-1]],'\n',diccionario)
                 
             codigo+=[[indice,mensaje[posicion-1]]]            
             codigo+=[[0,'EOF']]
         else:
             diccionario+=[cadena]
-            
-            if debug:
-                print([indice,'EOF'],'\n',diccionario)
                 
             codigo+=[[indice,'EOF']]
     return codigo 
@@ -100,10 +88,7 @@ def LZ78Decode(codigo,debug=False):
             palabra=diccionario[indice-1]+letra
             mensaje+=palabra
             diccionario+=[palabra]
-            
-            if debug:
-                print(cdi.green(mensaje[:-len(palabra)])+cdi.blue(diccionario[indice-1])+cdi.red(letra))
-                cdi.escribe(diccionario,debug)
+
             
     indice=codigo[n-1][0]
     letra=codigo[n-1][1]

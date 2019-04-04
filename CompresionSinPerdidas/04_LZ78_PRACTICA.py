@@ -16,37 +16,38 @@ LZ78Code(mensaje)=[[0, 'w'], [0, 'a'], [0, 'b'], [3, 'a'],
 """
 
 def LZ78Code(mensaje):
-    n=len(mensaje)
-    codigo=[]
-    diccionario=[]
-    posicion=0
-    while(posicion<n):
-        indice=0
-        l=1
-        cadena=mensaje[posicion:posicion+l]
+    ## Inicializaciones
+    n = len(mensaje)
+    codigo = []
+    dicc = []
+    indice_actual = 0
+
+    while(indice_actual < n):
+        indice = 0
+        l = 1
+        cadena = mensaje[indice_actual:indice_actual+l]
             
-        while True:
+        while indice_actual + l + 1 <= n:
             try:
-                indice=diccionario.index(cadena)+1
-                l+=1
-                if posicion+l>n: break
-                cadena=mensaje[posicion:posicion+l]
+                indice = dicc.index(cadena)+1
             except:
                 break
-        posicion+=l
-        if posicion<n:
-            diccionario+=[cadena]
-                
-            codigo+=[[indice,mensaje[posicion-1]]]
-        elif posicion==n:
-            diccionario+=[cadena]
-                
-            codigo+=[[indice,mensaje[posicion-1]]]            
-            codigo+=[[0,'EOF']]
+            l += 1
+            cadena = mensaje[indice_actual:indice_actual+l]
+            
+        indice_actual += l
+
+        if indice_actual < n:
+            dicc += [cadena]
+            codigo += [[indice,mensaje[indice_actual-1]]]
+        elif indice_actual == n:
+            dicc += [cadena]
+            codigo += [[indice,mensaje[indice_actual-1]]]            
+            codigo += [[0,'EOF']]
         else:
-            diccionario+=[cadena]
-                
-            codigo+=[[indice,'EOF']]
+            dicc += [cadena]
+            codigo += [[indice,'EOF']]
+
     return codigo 
     
 """
@@ -62,34 +63,36 @@ LZ78Decode(code)='mississippi mississippi river'
 """    
 
 def LZ78Decode(codigo):
-    mensaje=''
-    diccionario=[]
-    n=len(codigo)
-    for i in range(n-1):
-        indice=codigo[i][0]
-        letra=codigo[i][1]
-            
-        if indice==0:
-            mensaje+=letra
-            diccionario+=[letra]
+    ## Inicializaciones
+    mensaje_decodificado = ''
+    dicc = []
+    n = len(codigo)
+    indice = codigo[0][0]
+    simbolo = codigo[0][1]
+
+    for i in range(n-1):            
+        if indice == 0:
+            mensaje_decodificado += simbolo
+            dicc += [simbolo]
         else:
-            palabra=diccionario[indice-1]+letra
-            mensaje+=palabra
-            diccionario+=[palabra]  
-    indice=codigo[n-1][0]
-    letra=codigo[n-1][1]
+            palabra = dicc[indice-1] + simbolo
+            mensaje_decodificado += palabra
+            dicc += [palabra] 
+        indice = codigo[i+1][0]
+        simbolo = codigo[i+1][1]
 
-    if indice>0:
-        palabra=diccionario[indice-1]
-        mensaje+=palabra
+    if indice > 0:
+        palabra = dicc[indice-1]
+        mensaje_decodificado += palabra
       
-    return mensaje
+    return mensaje_decodificado
 
-mensaje='wabba wabba wabba wabba woo woo woo' 
+mensaje='wabba wabba wabba wabba woo woo woo'
+print('Mensaje original:   ', mensaje) 
 mensaje_codificado=LZ78Code(mensaje)
-print('Código: ',mensaje_codificado)   
+print('Codigo: ',mensaje_codificado)   
 mensaje_recuperado=LZ78Decode(mensaje_codificado)
-print('Código: ',mensaje_recuperado)   
+print('Mensaje recuperado: ',mensaje_recuperado)   
 '''
 print(mensaje)
 print(mensaje_recuperado)

@@ -83,13 +83,14 @@ def LZ78Decode(codigo):
         palabra=diccionario[indice-1]
         mensaje+=palabra
       
-    return mensaje, diccionario
+    return mensaje
 
 mensaje='wabba wabba wabba wabba woo woo woo' 
 mensaje_codificado=LZ78Code(mensaje)
 print('Código: ',mensaje_codificado)   
 mensaje_recuperado=LZ78Decode(mensaje_codificado)
-print('Código: ',mensaje_codificado)   
+print('Código: ',mensaje_recuperado)   
+'''
 print(mensaje)
 print(mensaje_recuperado)
 if (mensaje!=mensaje_recuperado):
@@ -124,6 +125,6 @@ if (mensaje!=mensaje_recuperado):
         print(mensaje[-5:],mensaje_recuperado[-5:])
 
 
-
+'''
 
     

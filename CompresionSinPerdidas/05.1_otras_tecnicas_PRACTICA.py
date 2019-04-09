@@ -69,13 +69,21 @@ entropía.
 """
 
 def tablaFrecuencias(mensaje):
+    # inicializaciones
+    _listapalabras = {}
     listapalabras = []
+
+    # recorremos cada carácter del mensaje
     for x in mensaje:
-        try:
-            index = listapalabras.find(x)
-            listapalabras[index][1] = listapalabras[index][1] + 1
-        except:
-            listapalabras.append([x, 1])
+        if x not in _listapalabras:
+            _listapalabras[x] =  1
+        else:
+            _listapalabras[x] = _listapalabras[x] + 1
+    
+    # diccionario -> list
+    for key, value in _listapalabras.items():
+        temp = [key,value]
+        listapalabras.append(temp)
 
     return listapalabras
 
@@ -115,5 +123,8 @@ Nueva entropía: 4.507878869023793
 
 
 Observar qué pasa a medida que el mensaje se acerca al texto entero.
+
+with open ("la_regenta_utf8", "r") as myfile:
+    mensaje = myfile.read()
 
 """

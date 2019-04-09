@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
-
+import math
 
 """
 Dado un mensaje y un alfabeto, dar su codificación usando la técnica 
@@ -68,11 +66,38 @@ print(pos)
 1. Hallar la tabla de frecuencias asociada a los símbolos del 
 fichero que contiene el texto de 'La Regenta' y calcular la 
 entropía. 
+"""
+
+def tablaFrecuencias(mensaje):
+    listapalabras = []
+    for x in mensaje:
+        try:
+            index = listapalabras.find(x)
+            listapalabras[index][1] = listapalabras[index][1] + 1
+        except:
+            listapalabras.append([x, 1])
+
+    return listapalabras
+
+'''
+Dada una lista de frecuencias, hallar su entropía.
+'''
+def Entropia(frecuencias):
+    frecuenciaTotal = sum(frecuencias)
+    sumatorio = 0.0
+    for x in frecuencias:
+        if x != 0:
+            sumatorio += (x / frecuenciaTotal) * math.log2((x / frecuenciaTotal))
+    return -sumatorio
 
 mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte.'
-tabla_frecuencias=[' ', 23], [',', 2], ['.', 2], ['E', 1], ['L', 1], ['N', 1], ['S', 1], ['a', 18], ['b', 4], ['c', 6], ['d', 3], ['e', 15], ['g', 1], ['h', 2], ['i', 7], ['j', 1], ['l', 7], ['m', 2], ['n', 6], ['o', 7], ['p', 2], ['q', 2], ['r', 9], ['s', 8], ['t', 4], ['u', 6], ['v', 1], ['y', 1], ['z', 1], ['í', 1]]
+tabla_frecuencias = tablaFrecuencias(mensaje)
+print(tabla_frecuencias)
+entropia = Entropia(tabla_frecuencias)
+print(entropia)
+#tabla_frecuencias=[' ', 23], [',', 2], ['.', 2], ['E', 1], ['L', 1], ['N', 1], ['S', 1], ['a', 18], ['b', 4], ['c', 6], ['d', 3], ['e', 15], ['g', 1], ['h', 2], ['i', 7], ['j', 1], ['l', 7], ['m', 2], ['n', 6], ['o', 7], ['p', 2], ['q', 2], ['r', 9], ['s', 8], ['t', 4], ['u', 6], ['v', 1], ['y', 1], ['z', 1], ['í', 1]]
 Entropía: 4.224930298009863
-
+"""
 2. A continuación aplicar la transformación de Burrows-Wheeler 
 al fichero (primero probad con una parte antes de hacerlo 
 con el fichero entero) y a continuación aplicar MtFCode a 

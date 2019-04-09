@@ -6,19 +6,34 @@
 """
 Dado un mensaje y un alfabeto, dar su codificación usando la técnica 
 de 'Move to Front'.
-
-
-mensaje='mi mama me mima mucho'
-alfabeto=[' ', 'a', 'c', 'e', 'h', 'i', 'm', 'o', 'u']
-MtFCode(mensaje,alfabeto)=[6, 6, 2, 2, 3, 1, 1, 2, 2, 5, 2, 
-                           2, 4, 1, 4, 3, 2, 8, 6, 7, 8]
-
 """
 
 def MtFCode(mensaje,alfabeto):
+    # inicializaciones
+    move_to_front_list = []
 
+    for i in range(len(mensaje)):
+        # encontrar posición en el alfabeto
+        # y añadirla a move_to_front_list
+        letter = mensaje[0]
+        index_alfabeto = alfabeto.index(letter)
+        move_to_front_list.append(index_alfabeto)
 
+        # actualizar alfabeto
+        alfabeto.remove(letter)
+        alfabeto.insert(0, letter)
 
+        # actualizar mensaje
+        mensaje = mensaje[1:]
+
+    return move_to_front_list
+
+mensaje='mi mama me mima mucho'
+alfabeto=[' ', 'a', 'c', 'e', 'h', 'i', 'm', 'o', 'u']
+move_to_front_list = MtFCode(mensaje, alfabeto)
+#print(move_to_front_list)
+#print(move_to_front_list == [6, 6, 2, 2, 3, 1, 1, 2, 2, 5, 2, 2, 4, 1, 4, 3, 2, 8, 6, 7, 8])
+#MtFCode(mensaje,alfabeto)=[6, 6, 2, 2, 3, 1, 1, 2, 2, 5, 2, 2, 4, 1, 4, 3, 2, 8, 6, 7, 8]
 
 """
 Dado un mensaje, aplicar la transformación de Burrows-Wheeler

@@ -15,25 +15,37 @@ MtFCode(mensaje,alfabeto)=[6, 6, 2, 2, 3, 1, 1, 2, 2, 5, 2,
 
 """
 
-def MtFCode(mensaje,alfabeto):
+#def MtFCode(mensaje,alfabeto):
 
 
 
-
-"""
-Dado un mensaje, aplicar la transformación de Burrows-Wheeler
-devolviendo la última columna y la posición.
 
 mensaje='cadacamacasapasa'
-BWT(mensaje)=('sdmccspcaaaaaaaa', 8)
+#BWT(mensaje)
+#=('sdmccspcaaaaaaaa', 8)
 
-"""
+
 
 def BWT(mensaje):
-
+    buffer_palabras = []
+    palabra = mensaje
+    ultima_columna = ''
+    buffer_palabras.append(palabra) #primer valor de la lista
+    #encontramos combinación de palabras ordenadas
+    for i in range(len(mensaje)-1):
+        palabra = palabra[1:] + palabra[0]
+        buffer_palabras.append(palabra)
+    buffer_palabras.sort()
+    for x in range(len(buffer_palabras)):
+        ultima_columna = ultima_columna + buffer_palabras[x][-1]
+    posicion = buffer_palabras.index(mensaje)
     return ultima_columna, posicion    
 
 
+mensaje='cadacamacasapasa'
+ultima_col,pos = BWT(mensaje)
+print(ultima_col)
+print(pos)
 
 
 

@@ -23,7 +23,7 @@ LZ78Code(mensaje)=[[0, 'w'], [0, 'a'], [0, 'b'], [3, 'a'],
   
 """
 
-def LZ78Code(mensaje,debug=False):
+def LZ78Code(mensaje):
     n=len(mensaje)
     codigo=[]
     diccionario=[]
@@ -32,7 +32,6 @@ def LZ78Code(mensaje,debug=False):
         indice=0
         l=1
         cadena=mensaje[posicion:posicion+l]
-            
         while True:
             try:
                 indice=diccionario.index(cadena)+1
@@ -66,24 +65,16 @@ code=
 
 LZ78Decode(mensaje)=
 """    
-def LZ78Decode(codigo,debug=False):
+def LZ78Decode(codigo):
     mensaje=''
     diccionario=[]
     n=len(codigo)
     for i in range(n-1):
         indice=codigo[i][0]
-        letra=codigo[i][1]
-        
-        if debug:
-            print(codigo[i])
-            
+        letra=codigo[i][1]    
         if indice==0:
             mensaje+=letra
             diccionario+=[letra]
-            
-            if debug:
-                print(cdi.green(mensaje[:-1])+cdi.red(letra))
-                cdi.escribe(diccionario,debug)
         else:
             palabra=diccionario[indice-1]+letra
             mensaje+=palabra
@@ -167,13 +158,42 @@ def LZWDecode(codigo, diccionarioInicial):
     
     return mensaje, diccionario
 
+
+######################COSAS INNECESARIAS######################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #mensaje_original="ababababba".upper()
 ##mensaje_original="accdaaacffaeafabdbbafafcaaecfccffa"
 #mensaje_codificado, diccionarioInicial=LZWCode(mensaje_original,debug=False)   
 #print(mensaje_codificado, diccionarioInicial)    
 #print()    
 #mensaje_recuperado, diccionarioRecuperado= LZWDecode(mensaje_codificado, diccionarioInicial, True)
-
+'''
 #%%
 print()
 print()
@@ -182,9 +202,9 @@ print()
 #mr= accdaaacffaeaffbdbbeaeacaaeaaccccfa
 mensaje_original="ababababba".upper()
 mensaje_original="accdaaacffaeafabdbbafafcaaecfccffa"
-mensaje_codificado, diccionarioInicial=LZWCode(mensaje_original, True)   
+mensaje_codificado, diccionarioInicial=LZWCode(mensaje_original)   
 print(mensaje_codificado, diccionarioInicial)    
-mensaje_recuperado, diccionarioRecuperado= LZWDecode(mensaje_codificado, diccionarioInicial, True)
+mensaje_recuperado, diccionarioRecuperado= LZWDecode(mensaje_codificado, diccionarioInicial)
 if mensaje_original!=mensaje_recuperado:
     print("EEEEEEEEEEEEEEEERRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOORRRRRR")
 if  diccionarioInicial!= diccionarioInicial:
@@ -221,7 +241,7 @@ mensaje="‘The Babel fish,’ said The Hitchhiker’s Guide to the Galaxy quiet
 #mensaje='abracadabrapatadecabracabracabracabracabraabracadabrapatadecabra'
 
 #mensaje_codificado=LZ78Code(mensaje,True)
-mensaje_codificado=LZWCode(mensaje,True)
+mensaje_codificado=LZWCode(mensaje)
 print('Código: ',mensaje_codificado)   
 
 #mensaje_recuperado, diccionario=LZ78Decode(mensaje_codificado,True)
@@ -232,6 +252,8 @@ print('Código: ',mensaje_codificado)
 
 
 #%%
+'''
+'''
 print()
 print()
 print()
@@ -267,13 +289,14 @@ if (mensaje!=mensaje_recuperado):
         print(len(mensaje),len(mensaje_recuperado))
         print(mensaje[-5:],mensaje_recuperado[-5:])
         
-        
+  '''      
 #%%
 
 
 """
 Comparacion LZ78 LZW
 """
+'''
 print()
 #with open ("la_regenta_capitulo1", "r") as myfile:
 with open ("la_regenta_utf8", "r") as myfile:
@@ -296,6 +319,7 @@ if (mensaje!=mensaje_recuperado):
         print(len(mensaje),len(mensaje_recuperado))
         print(mensaje[-5:],mensaje_recuperado[-5:])
 #%%
+
 mensaje=mensaje_leido[0:200000]        
 start_time = time.clock()
 mensaje_codificado, diccionario=LZWCode(mensaje)
@@ -313,7 +337,7 @@ if (mensaje!=mensaje_recuperado):
         print(len(mensaje),len(mensaje_recuperado))
         print(mensaje[-5:],mensaje_recuperado[-5:])
 
- 
+ '''
 #%%
 
 #'''

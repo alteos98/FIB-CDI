@@ -78,6 +78,7 @@ alfabeto = ['a','b','c','d']
 probabilidades = [0.2,0.1,0.1,0.6]
 longitud = 5
 valor = 0.7775
+###########################################
 
 ###########PREGUNTA 4 #####################
 
@@ -91,3 +92,21 @@ def H1(p):
 VALOR DE L ESTA ENTRE EL VALOR DE H1 Y H1 + 1
 '''
 #########################################
+
+########### PREGUNTA 8 ###################
+
+
+
+##################################################
+##############PREGUNTA 10, KRAFT CON LONGITUDES ################
+
+def  kraft2(L, q=2):
+    l = max(L)
+    res = pow(2, l)
+    for x in L:
+        res -= (pow(2, l) / pow(2, x))
+    return round(res)
+
+L = [2,2,3,7,8,8,8]
+print("PREGUNTA 10: kraft " + str(kraft2(L)))
+###############################################

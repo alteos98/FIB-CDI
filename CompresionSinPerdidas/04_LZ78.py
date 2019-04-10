@@ -106,55 +106,35 @@ LZW
 
 """    
     
-def LZWCode(mensaje,debug=False):
+def LZWCode(mensaje):
     n=len(mensaje)
     codigo=[]
     diccionario=list(set(mensaje))
     diccionario.sort()
     diccionarioInicial=diccionario[:]
-    if debug:
-        print(diccionario)
     posicion=0
     while(posicion<n):
         indice=0
         l=1
         cadena=mensaje[posicion:posicion+l]
-        if debug:
-#            print(green(mensaje[:posicion])+red(mensaje[posicion:]))
-            if posicion>0:
-                print(cdi.green(mensaje[:posicion])+cdi.blue(mensaje[posicion:posicion+1])+cdi.red(mensaje[posicion+1:]))
-            else:
-                print(cdi.green(mensaje[:posicion])+cdi.red(mensaje[posicion:]))
-            print('+'+cadena)
         while True:  
             try:
                 indice=diccionario.index(cadena)+1
                 l+=1
                 if posicion+l>n: break
                 cadena=mensaje[posicion:posicion+l]
-                if debug:
-                    print('+'+cadena)
             except:
                 break
         posicion+=l-1
         if posicion<n:
             diccionario+=[cadena]
-            if debug:
-                print([indice])
-                print(diccionario)
             codigo+=[indice]
         elif posicion==n:
             diccionario+=[cadena]
-            if debug:
-                print([indice])
-                print(diccionario)
             codigo+=[indice]            
             codigo+=[0]
         else:
             diccionario+=[cadena]
-            if debug:
-                print([indice])
-                print(diccionario)
             codigo+=[indice]
     return codigo, diccionarioInicial 
  
@@ -164,43 +144,26 @@ def LZWCode(mensaje,debug=False):
 #print(mensaje_codificado, diccionarioInicial)    
    
 #%% 
-def LZWDecode(codigo, diccionarioInicial, debug=False):
+def LZWDecode(codigo, diccionarioInicial):
     indice=codigo[0]-1
     mensaje=diccionarioInicial[indice]
     diccionario=diccionarioInicial
     inicio_nueva_palabra_del_diccionario=diccionarioInicial[indice]
-    if debug:
-        print('Leo '+str(codigo[0])+' que corresponde a: '+diccionarioInicial[indice])       
-        print('Inicio de la nueva palabra del diccionario: '+inicio_nueva_palabra_del_diccionario+'?')
     n=len(codigo)
     for i in range(1,n-1):
         indice=codigo[i]-1
         if indice<len(diccionario):
             palabra=diccionario[indice]
-            if debug:
-                print('\nLeo '+str(codigo[i])+' que corresponde a: '+diccionarioInicial[indice])       
-                print('Nueva palabra del diccionario: '+inicio_nueva_palabra_del_diccionario+palabra[0])
             mensaje+=palabra
             diccionario+=[inicio_nueva_palabra_del_diccionario+palabra[0]]
             inicio_nueva_palabra_del_diccionario=palabra
-            if debug:
-                print('Inicio de la nueva palabra del diccionario: '+inicio_nueva_palabra_del_diccionario+'?')
             
         else:
             #La palabra aún no está en el diccionario, la construyo
             palabra=inicio_nueva_palabra_del_diccionario+inicio_nueva_palabra_del_diccionario[0]
-            if debug:
-                print('\nLeo '+str(codigo[i])+' que corresponde a: '+cdi.red(inicio_nueva_palabra_del_diccionario+'?')+cdi.blue(' NO ESTÁ COMPLETA'))       
-                print(cdi.green('Se completa con la primera letra de la última plababra del diccionario leída que es el inicio de la palabra por completar: ')+cdi.red(inicio_nueva_palabra_del_diccionario[0]))       
-                print('Por lo tanto  '+str(codigo[i])+' se corresponde a: '+cdi.red(inicio_nueva_palabra_del_diccionario+palabra[0])+cdi.blue(' YA ESTÁ COMPLETA'))       
-
-                print('Nueva palabra del diccionario: '+inicio_nueva_palabra_del_diccionario+palabra[0])
             mensaje+=palabra
             diccionario+=[inicio_nueva_palabra_del_diccionario+palabra[0]]
             inicio_nueva_palabra_del_diccionario=palabra
-        if debug:
-            print('Mensaje: '+mensaje)
-            print('Diccionario: ',diccionario+[inicio_nueva_palabra_del_diccionario+'?'])
     
     return mensaje, diccionario
 

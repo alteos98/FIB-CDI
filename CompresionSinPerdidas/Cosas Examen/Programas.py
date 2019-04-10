@@ -1,3 +1,10 @@
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+
+
 ###############################LZ77#############################
 def LZ77Code(mensaje,S=12,W=18):
 	code=[[0,0,mensaje[0]]]
@@ -48,7 +55,9 @@ def LZ77Code(mensaje,S=12,W=18):
 		lookahead= str(mensaje[i:ahead+i])
 	code[-1]=[code[-1][0],code[-1][1]+1,'EOF']
 	return code
-#####################DECODE########################
+
+
+#####################DECODE PREGUNTA 7########################
 def LZ77Decode(codigo):
 	mensaje=''
 	for i in codigo:
@@ -61,4 +70,24 @@ def LZ77Decode(codigo):
 				mensaje += mensaje[i[0]+1:i[1]+1] 
 		mensaje+= i[2]
 	return mensaje[:-3]
-    
+########################PREGUNTA 2, MENSAJE ORIGINAL###############
+
+
+
+alfabeto = ['a','b','c','d']
+probabilidades = [0.2,0.1,0.1,0.6]
+longitud = 5
+valor = 0.7775
+
+###########PREGUNTA 4 #####################
+
+def H1(p):
+    sum = 0.0
+    for x in p:
+        if x != 0:
+            sum += x * math.log2(x)
+    return -sum
+'''
+VALOR DE L ESTA ENTRE EL VALOR DE H1 Y H1 + 1
+'''
+#########################################

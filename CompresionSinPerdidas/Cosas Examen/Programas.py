@@ -110,7 +110,7 @@ def  kraft2(L, q=2):
 L = [2,2,3,7,8,8,8]
 print("PREGUNTA 10: kraft " + str(kraft2(L)))
 ###############################################
--########### PREGUNTA 5, DECODE DE BW ##########
+########### PREGUNTA 5, DECODE DE BW ##########
 def getPosRel(columna,pos):
 	elem = columna[pos]
 	i=0

@@ -56,7 +56,9 @@ def LZ77Code(mensaje,S=12,W=18):
 	code[-1]=[code[-1][0],code[-1][1]+1,'EOF']
 	return code
 
-
+mensaje = 'abcdeabaebbadab'
+code = LZ77Code(mensaje, 12, 18)
+print(code)
 #####################DECODE PREGUNTA 7########################
 def LZ77Decode(codigo):
 	mensaje=''
@@ -88,9 +90,13 @@ def H1(p):
         if x != 0:
             sum += x * math.log2(x)
     return -sum
+
 '''
 VALOR DE L ESTA ENTRE EL VALOR DE H1 Y H1 + 1
 '''
+ddp = [11/94, 10/47, 11/47, 8/47, 25/94]
+longitud_media = H1(ddp)
+print(longitud_media, longitud_media + 1)
 #########################################
 
 ########### PREGUNTA 8 ###################

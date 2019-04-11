@@ -44,7 +44,7 @@ con el fichero entero) y a continuación aplicar MtFCode a
 la última columna obtenida. Hallar la tabla de frecuencias 
 del resultado obtenido y calcular la entropía.
 """
-"""
+
 def MtFCode(mensaje,alfabeto):
     # inicializaciones
     move_to_front_list = []
@@ -64,30 +64,6 @@ def MtFCode(mensaje,alfabeto):
         mensaje = mensaje[1:]
 
     return move_to_front_list
-"""
-
-def MtFCode(mensaje,alfabeto):
-	res=[]
-	bet=alfabeto[:]
-	for c in mensaje:
-		res.append(bet.index(c))
-		bet.remove(c)
-		bet.insert(0,c)
-	return res
-
-def MtFDecode(code,alfabeto):
-	res=''
-	bet=alfabeto[:]
-	for c in code:
-		a=bet[c]
-		res=res+a
-		bet.pop(c)
-		bet.insert(0,a)
-	return res
-
-mensaje = 'abcdabcd'
-alfabeto = ['a', 'b', 'c', 'd']
-print(MtFDecode(MtFCode(mensaje, alfabeto), alfabeto))
 
 def BWT(mensaje):
     buffer_palabras = []

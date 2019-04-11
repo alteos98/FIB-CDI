@@ -110,3 +110,38 @@ def  kraft2(L, q=2):
 L = [2,2,3,7,8,8,8]
 print("PREGUNTA 10: kraft " + str(kraft2(L)))
 ###############################################
+########### PREGUNTA 5, DECODE DE BW ##########
+def getPosRel(columna,pos):
+	elem = columna[pos]
+	i=0
+	cont=1
+	while i<pos:
+		if(columna[i]==elem): cont=cont+1
+		i=i+1
+	return cont
+	
+def getPos(columna,elem,pos):
+	i=0
+	cont=pos
+	posicion=-1
+	while i<len(columna) and cont>0:
+		if(columna[i]==elem):
+			 cont=cont-1
+			 if(cont==0): posicion=i
+		i=i+1
+	return posicion
+
+def iBWT(ultima_columna, posicion):
+	columna_aux = sorted(ultima_columna, key=str.lower)
+	mensaje = ultima_columna[posicion]
+	while(len(mensaje)<len(ultima_columna)):
+		p = getPosRel(ultima_columna,posicion)
+		posicion = getPos(columna_aux,ultima_columna[posicion],p)
+		mensaje=ultima_columna[posicion]+mensaje
+	return mensaje
+
+ultima_columna = 'lmsmlcaaaaaa'
+posicion = 0
+mensaje = iBWT(ultima_columna, posicion)
+print(mensaje)
+##########################################

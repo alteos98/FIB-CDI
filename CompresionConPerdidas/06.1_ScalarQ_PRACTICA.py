@@ -48,7 +48,7 @@ def cuantizacionPixel (imagen, niveles = [1,2,3,4,5,6,7,8]):
 
         ## Mostrar imagen
         plt.imshow(imageCopy, cmap=plt.cm.gray)
-        #plt.show()
+        plt.show()
 
 #%%
 """
@@ -105,7 +105,7 @@ def cuantizacionBloques (imagen, n_bloque=8, k=2):
 
     ## Mostrar imagen
     plt.imshow(imagenCuantizada, cmap=plt.cm.gray)
-    #plt.show()
+    plt.show()
 
 
 """

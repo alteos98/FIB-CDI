@@ -14,7 +14,7 @@ imagen = misc.ascent()#Leo la imagen
 plt.imshow(imagen, cmap=plt.cm.gray) 
 plt.xticks([])
 plt.yticks([])
-plt.show() 
+#plt.show() 
         
 """
 Mostrar la imagen habiendo cuantizado los valores de los píxeles en
@@ -27,6 +27,8 @@ Sigma=np.sqrt(sum(sum((imagenOriginal-imagenCuantizada)**2)))/(n*m)
 """
 
 def cuantizacionPixel (imagen, niveles = [1,2,3,4,5,6,7,8]):
+    print('CUANTIZACION POR PIXEL')
+
     for k in niveles:
         shift = 2 ** (8 - k + 1)
         imageCopy = imagen.copy()
@@ -42,12 +44,12 @@ def cuantizacionPixel (imagen, niveles = [1,2,3,4,5,6,7,8]):
         print('Nivel ' + str(k))
         print('Sigma: ' + str(sigma))
         print('Ratio de compresion: ' + str(ratioCompresion))
+        print()
 
         ## Mostrar imagen
         plt.imshow(imageCopy, cmap=plt.cm.gray)
-        plt.show()
+        #plt.show()
 
-#cuantizacionPixel(imagen)
 #%%
 """
 Mostrar la imagen cuantizando los valores de los pixeles de cada bloque
@@ -58,49 +60,56 @@ es necesario guardar 16 bits extra para los valores máximos
 y mínimos del bloque, esto supone 16/n_bloque**2 bits más por pixel).
 """
 
-def toBlocks(img,fil,col):
-    blockImage= np.zeros((int(fil*col/64),8,8))
-    block=0
-    for i in range(int(col/8)):
-        for j in range(int(fil/8)):
-            blockImage[block]= np.reshape(img[j*8:j*8+8,i*8:i*8+8],[8,8])
-            block+=1
+def pasarABloques(image, rows, cols):
+    blockImage = np.zeros((int(rows * cols / 64), 8, 8))
+    block = 0
+    for i in range(int(cols / 8)):
+        for j in range(int(rows / 8)):
+            blockImage[block] = np.reshape(image[j*8:j*8+8, i*8:i*8+8], [8,8])
+            block += 1
     return blockImage
 
-
-def fromBlocks(blockImage,fil,col):
-    img = np.zeros((fil,col))
-    z=0
-    for i in range(int(col/8)):
-        for j in range(int(fil/8)):
-            img[j*8:j*8+8,i*8:i*8+8] = blockImage[z]
-            z+=1
+def pasarDeBloques(blockImage, rows, cols):
+    img = np.zeros((rows, cols))
+    z = 0
+    for i in range(int(cols / 8)):
+        for j in range(int(rows / 8)):
+            img[j*8:j*8+8, i*8:i*8+8] = blockImage[z]
+            z += 1
     return img
 
-
-def quantizarAPixelesyBloques(imagen,n_bloque=8,k=2):
-    imagenOriginal= imagen.copy()
-    imagenBlocks= toBlocks(imagenOriginal,len(imagen),len(imagen[0]))
-    numero_bloques = len(imagenBlocks)
+def cuantizacionBloques (imagen, n_bloque=8, k=2):
+    imagenCopy = imagen.copy()
+    imagenBlocks = pasarABloques(imagenCopy, len(imagen), len(imagen[0]))
+    n_bloques = len(imagenBlocks)
 	
+    ## Cuantificación
     for i in range(len(imagenBlocks)):
-        maximo= np.max(imagenBlocks[i])
-        minimo= np.min(imagenBlocks[i])
-        q= np.floor((maximo - minimo)/(2**k))
-        if q != 0 : 
-            #cuantizo a valores 0..2**k
-            imagenBlocks[i] = np.floor(imagenBlocks[i]-minimo)/q
-            #recupero valores 0..255
-            imagenBlocks[i]= np.round((imagenBlocks[i] + 0.5 )*q) + minimo
-    imagenCuantizada = fromBlocks(imagenBlocks,len(imagen),len(imagen[0]))
-    valores= len(imagen)*len(imagen[0])
-    tamanyo_compr= valores *k + numero_bloques*8*2#maximo y minimo bloque
-    ratio_compresion =  valores*8 / tamanyo_compr
-    print('ratio_compresion:' + str(ratio_compresion))
-    sigma = np.sqrt(sum(sum((imagenOriginal-imagenCuantizada)**2))/(n*m))
-    print('sigma:' + str(sigma))
+        maximo = np.max(imagenBlocks[i])
+        minimo = np.min(imagenBlocks[i])
+        q = np.floor((maximo - minimo) / (2**k))
+        if q != 0 :
+            imagenBlocks[i] = np.floor(imagenBlocks[i] - minimo) / q
+            imagenBlocks[i]= np.round((imagenBlocks[i] + 0.5 ) * q) + minimo
+    imagenCuantizada = pasarDeBloques(imagenBlocks, len(imagen), len(imagen[0]))
+
+    ## Sigma y RC
+    n_pixeles = len(imagen) * len(imagen[0])
+    tamanyo_compr = n_pixeles * k + n_bloques * 8 * 2
+    sigma = np.sqrt(sum(sum((imagenCopy - imagenCuantizada)**2))) / (n * m)
+    ratio_compresion = n_pixeles * 8 / tamanyo_compr
+    print('CUANTIZACION POR BLOQUE')
+    print('Sigma: ' + str(sigma))
+    print('Ratio de compresion: ' + str(ratio_compresion))
+    print()
+
+    ## Mostrar imagen
     plt.imshow(imagenCuantizada, cmap=plt.cm.gray)
     #plt.show()
-	
 
-quantizarAPixelesyBloques(imagen)
+
+"""
+MAIN
+"""
+cuantizacionPixel(imagen)
+cuantizacionBloques(imagen)

@@ -10,7 +10,7 @@ import scipy.ndimage
 from scipy.cluster.vq import vq, kmeans
 
 #%%
-imagen=scipy.misc.imread('./standard_test_images/house.png')
+imagen=scipy.misc.imread('../standard_test_images/house.png')
 (n,m)=imagen.shape # filas y columnas de la imagen
 plt.figure()    
 plt.imshow(imagen, cmap=plt.cm.gray)

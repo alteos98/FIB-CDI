@@ -10,17 +10,12 @@ import scipy.ndimage
 from scipy.cluster.vq import vq, kmeans
 
 #%%
-imagen=scipy.misc.imread('../standard_test_images/house.png')
+imagen=plt.imread('/Users/ariadna/Desktop/FIB-CDI-1/CompresionConPerdidas/standard_test_images/house.png')
 (n,m)=imagen.shape # filas y columnas de la imagen
 plt.figure()    
 plt.imshow(imagen, cmap=plt.cm.gray)
 plt.show()
  
-
-
-
-
-
 
 #%%
 

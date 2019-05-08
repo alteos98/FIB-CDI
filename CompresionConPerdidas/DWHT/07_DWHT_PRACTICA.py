@@ -106,33 +106,14 @@ dwht_bloque(
 
 
 def dwht_bloque(p):
-      b = p.transpose
-      y = np.tensordot (b,p,0)
-      return y
-
+	h_wh = H_WH(4)
+	r = np.tensordot(np.tensordot(h_wh, p, axes = ([1][0])), h_wh, axes = ([1][0]))
+	return r
 
 def idwht_bloque(p):
-      if (np.linalg.det(p)) != 0.0 :
-            B = np.linalg.inv(p)
-      return B
-
-
-
-
-Q = np.array([
-      [217,   8, 248, 199],
-      [215, 189, 242,  10],
-      [200,  65, 191,  92],
-      [174, 239, 237, 118]
-      ])
-
-print(dwht_bloque(Q))
-
-
-
-
-
-
+	h_wh = H_WH(4)
+	r = np.tensordot(np.tensordot(h_wh, p, axes = ([1][0])), h_wh, axes = ([1][0]))
+	return r
 
 def determinante(A):
     # Copia CORRECTA de la matriz A en la de B.
@@ -160,3 +141,30 @@ Ver imágenes adjuntas
 """
 
 
+"""
+MAIN
+"""
+Q = np.array(
+	[[217,   8, 248, 199],
+    [215, 189, 242,  10],
+    [200,  65, 191,  92],
+    [174, 239, 237, 118]]
+)
+
+Q_resultado = np.array(
+	[[ 661,   -7.5, -48.5, 201],
+    [   3,  -27.5,  25.5,  57],
+    [  59,  -74.5,  36.5, -45],
+    [ -51, -112.5, 146.5,  45]]
+)
+
+r = dwht_bloque(Q)
+r_inversa = idwht_bloque(r)
+
+print("Probando dwht_bloque")
+print(r)
+print(r == Q_resultado)
+print()
+print("Probando idwht_bloque")
+print(r_inversa)
+print(r_inversa == Q)

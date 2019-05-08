@@ -11,7 +11,7 @@ import math
 from scipy.cluster.vq import vq, kmeans
 
 #%%
-imagen=scipy.misc.imread('/Users/ariadna/Desktop/FIB-CDI-1/CompresionConPerdidas/standard_test_images/house.png')
+imagen=scipy.misc.imread('C:/Users/alteo/Documents/GitHub/CDI/CompresionConPerdidas/standard_test_images/house.png')
 (n,m)=imagen.shape # filas y columnas de la imagen
 plt.figure()    
 plt.imshow(imagen, cmap=plt.cm.gray)
@@ -102,7 +102,7 @@ numEntradas=512
 pixelBits=8
 
 #carga imagen
-imagencamera=scipy.misc.imread('/Users/ariadna/Desktop/FIB-CDI-1/CompresionConPerdidas/standard_test_images/cameraman.png')
+imagencamera=scipy.misc.imread('C:/Users/alteo/Documents/GitHub/CDI/CompresionConPerdidas/standard_test_images/cameraman.png')
 (n,m)=imagencamera.shape # filas y columnas de la imagen
 plt.figure()    
 plt.imshow(imagencamera, cmap=plt.cm.gray)

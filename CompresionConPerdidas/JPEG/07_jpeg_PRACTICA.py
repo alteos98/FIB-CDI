@@ -6,7 +6,8 @@
 import numpy as np
 import scipy
 import scipy.ndimage
-import math 
+import math
+from scipy.fftpack import dct, idct
 pi=math.pi
 
 
@@ -60,41 +61,38 @@ idct_bloque(p,N)
 p bloque NxN
 
 """
-def getC(m,n):
-    N = m
-    C = np.zeros((m,n))
-    for i in range(m):
-        for j in range(n):
+
+def getTransform(N):
+    res = np.zeros((N, N))
+    for i in range(N):
+        for j in range(N):
                 aux1 = np.sqrt(2/N)
-                aux2=(2*j+1)*i*pi
+                aux2 = (2*j+1)*i*pi
                 aux2 /= (2*N)
                 aux2 = np.cos(aux2)
-                if(i==0): C[i,j]=aux1*aux2*(1/np.sqrt(2))
-                else:C[i,j]=aux1*aux2
-    return C
+                if i==0:
+                    res[i,j] = aux1 * aux2 * (1/np.sqrt(2))
+                else:
+                    res[i,j] = aux1 * aux2
+    return res
 
 def dct_bloque(p):
-    m,n=p.shape
-    C = getC(m,n)
-    n = np.tensordot(np.tensordot(C,p,axes=([1][0])),np.transpose(C),axes=([1][0]))
-    return n
+    return dct(dct(p, axis = 0, norm = 'ortho'), axis = 1, norm = 'ortho')
 
 def idct_bloque(p):
-    m,n=p.shape
-    C=getC(m,n)
-    n = np.tensordot(np.tensordot(np.transpose(C),p,axes=([1][0])),C,axes=([1][0]))
-    return n
+   return idct(idct(p, axis = 0, norm = 'ortho'), axis = 1, norm = 'ortho')
 
 """
 Reproducir los bloques base de la transformación para los casos N=4,8
 Ver imágenes adjuntas.
 """
+
 N = 4
 while N <= 8:
-    C = getC(N, N)
+    t = getTransform(N)
     for row in range(N):
         for col in range(N):
-            baseImage = np.tensordot(C[row], np.transpose(C[col]), 0)
+            baseImage = np.tensordot(t[row], np.transpose(t[col]), 0)
             plt.imshow(baseImage) 
             plt.xticks([])
             plt.yticks([])

@@ -60,16 +60,46 @@ idct_bloque(p,N)
 p bloque NxN
 
 """
+def getC(m,n):
+    N = m
+    C = np.zeros((m,n))
+    for i in range(m):
+        for j in range(n):
+                aux1 = np.sqrt(2/N)
+                aux2=(2*j+1)*i*pi
+                aux2 /= (2*N)
+                aux2 = np.cos(aux2)
+                if(i==0): C[i,j]=aux1*aux2*(1/np.sqrt(2))
+                else:C[i,j]=aux1*aux2
+    return C
+
 def dct_bloque(p):
+    m,n=p.shape
+    C = getC(m,n)
+    n = np.tensordot(np.tensordot(C,p,axes=([1][0])),np.transpose(C),axes=([1][0]))
+    return n
 
 def idct_bloque(p):
-
+    m,n=p.shape
+    C=getC(m,n)
+    n = np.tensordot(np.tensordot(np.transpose(C),p,axes=([1][0])),C,axes=([1][0]))
+    return n
 
 """
 Reproducir los bloques base de la transformación para los casos N=4,8
 Ver imágenes adjuntas.
 """
-
+N = 4
+while N <= 8:
+    C = getC(N, N)
+    for row in range(N):
+        for col in range(N):
+            baseImage = np.tensordot(C[row], np.transpose(C[col]), 0)
+            plt.imshow(baseImage) 
+            plt.xticks([])
+            plt.yticks([])
+            plt.show() 
+    N *= 2
 
 """
 Implementar la función jpeg_gris(imagen_gray) que: 
@@ -87,7 +117,7 @@ Sigma=np.sqrt(sum(sum((imagen_gray-imagen_jpeg)**2)))/np.sqrt(sum(sum((imagen_gr
 """
 
 def jpeg_gris(imagen_gray):
-
+    return 'hola'
 
 """
 Implementar la función jpeg_color(imagen_color) que: 
@@ -104,6 +134,7 @@ Sigma=np.sqrt(sum(sum((imagen_color-imagen_jpeg)**2)))/np.sqrt(sum(sum((imagen_c
 """
 
 def jpeg_color(imagen_color):
+    return 'hola'
 
 """
 #--------------------------------------------------------------------------

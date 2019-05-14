@@ -120,7 +120,18 @@ def idwht_bloque(p):
 Reproducir los bloques base de la transformación para los casos N=4,8,16
 Ver imágenes adjuntas
 """
-
+N = 4
+while N < 32:
+	H = H_WH(N)
+	for row in range(N):
+		for col in range(N):
+			baseImage = np.tensordot(H[row], np.transpose(H[col]), 0)
+			print(baseImage)
+			plt.imshow(baseImage) 
+			plt.xticks([])
+			plt.yticks([])
+			plt.show() 
+	N *= 2
 
 """
 MAIN

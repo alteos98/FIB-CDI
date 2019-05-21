@@ -150,6 +150,7 @@ def secondReshape(x, y, image):
 
 def jpeg_gris(imagen_gray):
     # Paso 1
+
     # Ajustar el tamaño de la imagen
     # Dividir en bloques 8x8
     originalX, originalY = imagen_gray.shape
@@ -171,6 +172,7 @@ def jpeg_gris(imagen_gray):
                 ImageInBlocs[i,w,z] /= Q_Luminance[w,z]
                 ImageInBlocs[i,w,z] = round(ImageInBlocs[i,w,z],0)
 
+
     # Paso 2    
     # Ratio de compresión
     ImagenCuantizada = secondReshape(x,y,ImageInBlocs)[:originalX, :originalY]
@@ -178,6 +180,7 @@ def jpeg_gris(imagen_gray):
     coefNul = (ImagenCuantizada == 0.).sum()
     CRatio = coef/(coef-coefNul)
     
+
     # Paso 3
     # Reversión de los cambios hechos sobre la imagen
     # Se aplica iDCT a los bloques de la imagen
@@ -191,6 +194,7 @@ def jpeg_gris(imagen_gray):
     # Eliminar las filas y columnas de más
     imagen_jpeg = imagenInv[:originalX, :originalY]
     
+
     # Paso 4
     # Pintar imagen
     plt.imshow(imagen_jpeg, cmap=plt.cm.gray) 
@@ -198,9 +202,11 @@ def jpeg_gris(imagen_gray):
     plt.yticks([])
     plt.show() 
     
+
     # Paso 5
     # Estimación del error
     sigma = np.sqrt(sum(sum((imagen_gray-imagen_jpeg)**2)))/np.sqrt(sum(sum((imagen_gray)**2)))
+
 
     # Paso 6
     # Printear datos
@@ -209,6 +215,7 @@ def jpeg_gris(imagen_gray):
     print('Ratio de compresión:', CRatio)
 
     return imagen_jpeg
+
 
 """
 Implementar la función jpeg_color(imagen_color) que: 
@@ -225,111 +232,118 @@ sigma=np.sqrt(sum(sum((imagen_color-imagen_jpeg)**2)))/np.sqrt(sum(sum((imagen_c
 """
 
 def jpeg_color(imagen_color):
-    #Compresión de la imagen
-    #Paso 1: Transformación del espacio de colores:
-    OrigM,OrigN,OrigC = imagen_color.shape
-    imagenY = np.zeros((OrigM,OrigN))
-    imagenCb = np.zeros((OrigM,OrigN))
-    imagenCr = np.zeros((OrigM,OrigN))
-    for i in range(OrigM):
-        for j in range(OrigN):
+    # Paso 1
+    # Compresión de la imagen
+
+    # Transformación del espacio de colores
+    originalX, originalY, originalZ = imagen_color.shape
+    imagenY = np.zeros((originalX,originalY))
+    imagenCb = np.zeros((originalX,originalY))
+    imagenCr = np.zeros((originalX,originalY))
+    for i in range(originalX):
+        for j in range(originalY):
             R = imagen_color[i,j,0]
             G = imagen_color[i,j,1]
             B = imagen_color[i,j,2]
-            Y = (75/256)*R+(150/256)*G+(29/256)*B
-            Cb = -(44/256)*R-(87/256)*G+(131/256)*B+128
-            Cr = (131/256)*R-(110/256)*G-(21/256)*B+128
-            imagenY[i,j]=Y
-            imagenCb[i,j]=Cb
-            imagenCr[i,j]=Cr
+            Y = (75/256)*R + (150/256)*G + (29/256)*B
+            Cb = -(44/256)*R - (87/256)*G + (131/256)*B + 128
+            Cr = (131/256)*R - (110/256)*G - (21/256)*B + 128
+            imagenY[i,j] = Y
+            imagenCb[i,j] = Cb
+            imagenCr[i,j] = Cr
             
-    #Paso 2: Ajustar tamaño de la matriz, añadir filas y columnas extra
-    imagenY_reshaped = adjustMatrix(OrigM,OrigN,imagenY)
-    x,y = imagenY_reshaped.shape
+    # Ajustar tamaño de la matriz, añadir filas y columnas extra
+    imagenY_reshaped = adjustMatrix(originalX,originalY,imagenY)
+    x, y = imagenY_reshaped.shape
     imagenY_reshaped = firstReshape(x,y,imagenY_reshaped)
-    imagenCb_reshaped = adjustMatrix(OrigM,OrigN,imagenCb)
+    imagenCb_reshaped = adjustMatrix(originalX,originalY,imagenCb)
     imagenCb_reshaped = firstReshape(x,y,imagenCb_reshaped)
-    imagenCr_reshaped = adjustMatrix(OrigM,OrigN,imagenCr)
+    imagenCr_reshaped = adjustMatrix(originalX,originalY,imagenCr)
     imagenCr_reshaped = firstReshape(x,y,imagenCr_reshaped)
     
-    #Paso 3: desplazar 128 y aplicar dct a los bloques de la imagen
-    imagenY_reshaped -=128
-    imagenCb_reshaped -=128
-    imagenCr_reshaped -=128
-    numBloc=int((x*y)/(8*8))
+    # Desplazar 128 y aplicar dct a los bloques de la imagen
+    imagenY_reshaped -= 128
+    imagenCb_reshaped -= 128
+    imagenCr_reshaped -= 128
+    numBloc = int((x*y)/(8*8))
     for i in range(numBloc):
         imagenY_reshaped[i]=dct_bloque(imagenY_reshaped[i])
-    for i in range(numBloc):
         imagenCb_reshaped[i]=dct_bloque(imagenCb_reshaped[i])
-    for i in range(numBloc):
         imagenCr_reshaped[i]=dct_bloque(imagenCr_reshaped[i])
     
-    #Paso 4: Cuantización de los valores:
-    for i in range(numBloc):
-            for w in range(8):
-                for z in range(8):
-                    imagenY_reshaped[i,w,z] /= Q_Luminance[w,z]
-                    imagenY_reshaped[i,w,z] = round(imagenY_reshaped[i,w,z],0)
+    # Cuantización de los valores
     Q = Q_matrix()
     for i in range(numBloc):
         for w in range(8):
             for z in range(8):
+                imagenY_reshaped[i,w,z] /= Q_Luminance[w,z]
+                imagenY_reshaped[i,w,z] = round(imagenY_reshaped[i,w,z],0)
+
                 imagenCb_reshaped[i,w,z] /= Q[w,z]
                 imagenCb_reshaped[i,w,z] = round(imagenCb_reshaped[i,w,z],0)
-                
-    for i in range(numBloc):
-        for w in range(8):
-            for z in range(8):
+
                 imagenCr_reshaped[i,w,z] /= Q_Chrominance[w,z]
                 imagenCr_reshaped[i,w,z] = round(imagenCr_reshaped[i,w,z],0)
     
-    #Calculo de la ratio de compresión aproximada:
-    coef = OrigM*OrigN*OrigC
-    coefNul = (imagenY_reshaped == 0).sum()+(imagenCb_reshaped == 0).sum()+(imagenCr_reshaped ==0).sum()
+
+    # Paso 2
+    # Calculo de la ratio de compresión aproximada
+    coef = originalX*originalY*originalZ
+    coefNul = (imagenY_reshaped == 0).sum() + (imagenCb_reshaped == 0).sum() + (imagenCr_reshaped ==0).sum()
     CRatio = coef/(coef-coefNul)
     
-    
-    #Proceso iverso:
-    #Paso 1: iDCT a los bloques
+
+    # Paso 3
+    # Proceso inverso
+
+    # iDCT a los bloques
     for i in range(numBloc):
-        imagenY_reshaped[i]=idct_bloque(imagenY_reshaped[i])
-    for i in range(numBloc):
-        imagenCb_reshaped[i]=idct_bloque(imagenCb_reshaped[i])
-    for i in range(numBloc):
-        imagenCr_reshaped[i]=idct_bloque(imagenCr_reshaped[i])
+        imagenY_reshaped[i] = idct_bloque(imagenY_reshaped[i])
+        imagenCb_reshaped[i] = idct_bloque(imagenCb_reshaped[i])
+        imagenCr_reshaped[i] = idct_bloque(imagenCr_reshaped[i])
         
-    #Paso 2: Reshape de la matriz
+    # Reshape de la matriz
     imagenY_inv = secondReshape(x,y,imagenY_reshaped)
     imagenCb_inv = secondReshape(x,y,imagenCb_reshaped)
     imagenCr_inv = secondReshape(x,y,imagenCr_reshaped)
     
-    #Paso3: Cambio al espacio de color RGB
-    imagen_jpeg = np.zeros((OrigM,OrigN,OrigC))
-    for i in range(OrigM):
-        for j in range(OrigN):
+    # Cambio al espacio de color RGB
+    imagen_jpeg = np.zeros((originalX,originalY,originalZ))
+    for i in range(originalX):
+        for j in range(originalY):
             Y = imagenY[i,j]
             Cb = imagenCb[i,j]
             Cr = imagenCr[i,j]
-            R = Y+(1.371*(Cr-128))
-            G = Y-(0.698*(Cr-128))-(0.336*(Cb-128))
-            B = Y+(1.732*(Cb-128))
-            imagen_jpeg[i,j,0]=R
-            imagen_jpeg[i,j,1]=G
-            imagen_jpeg[i,j,2]=B
+            R = Y + (1.371*(Cr-128))
+            G = Y - (0.698*(Cr-128))-(0.336*(Cb-128))
+            B = Y + (1.732*(Cb-128))
+            imagen_jpeg[i,j,0] = R
+            imagen_jpeg[i,j,1] = G
+            imagen_jpeg[i,j,2] = B
             
-    #Paso 4: Pintar imagen       
+
+    # Paso 4
+    # Pintar imagen       
     plt.imshow(imagen_jpeg.astype(np.uint8)) 
     plt.xticks([])
     plt.yticks([])
     plt.show() 
     
-    #Calculo del error:
+
+    # Paso 5
+    # Estimación del error
     imagen_jpeg = imagen_jpeg.astype(np.int64)
-    sigma=np.sqrt(sum(sum((imagen_color-imagen_jpeg)**2)))/np.sqrt(sum(sum((imagen_color)**2)))
-    print("Error de la imagen a color: ",sigma)
-    print("Ratio de compresion de la imagen a color:",CRatio)
+    sigma = np.sqrt(sum(sum((imagen_color-imagen_jpeg)**2)))/np.sqrt(sum(sum((imagen_color)**2)))
+
+
+    # Paso 6
+    # Printear datos
+    print('JPEG COLOR')
+    print('Estimación del error: ', sigma)
+    print('Ratio de compresión:', CRatio)
     
     return imagen_jpeg
+
 
 """
 #--------------------------------------------------------------------------

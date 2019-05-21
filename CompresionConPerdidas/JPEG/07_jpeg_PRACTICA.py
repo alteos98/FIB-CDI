@@ -77,7 +77,7 @@ def idct_bloque(p):
 Reproducir los bloques base de la transformación para los casos N=4,8
 Ver imágenes adjuntas.
 """
-'''
+
 N = 4
 while N <= 8:
     t = getTransform(N)
@@ -89,7 +89,7 @@ while N <= 8:
             plt.yticks([])
             plt.show() 
     N *= 2
-'''
+
 """
 Implementar la función jpeg_gris(imagen_gray) que: 
 1. dibuje el resultado de aplicar la DCT y la cuantización 
@@ -355,7 +355,8 @@ Imagen de GRISES
 ### pone lo lee como entero positivo sin signo de 8 bits uint8 y por ejemplo al 
 ### restar 128 puede devolver un valor positivo mayor que 128
 
-mandril_gray=scipy.ndimage.imread('C:/Users/alteo/Documents/GitHub/CDI/CompresionConPerdidas/JPEG/mandril_gray.png').astype(np.int32)
+direccion_imagen_gray = 'C:/Users/alteo/Documents/GitHub/CDI/CompresionConPerdidas/JPEG/mandril_gray.png'
+mandril_gray=scipy.ndimage.imread(direccion_imagen_gray).astype(np.int32)
 
 start = time.time()
 mandril_jpeg = jpeg_gris(mandril_gray)
@@ -371,7 +372,8 @@ Imagen COLOR
 ## Aplico.astype pero después lo convertiré a 
 ## uint8 para dibujar y a int64 para calcular el error
 
-mandril_color=scipy.misc.imread('C:/Users/alteo/Documents/GitHub/CDI/CompresionConPerdidas/JPEG/mandril_color.png').astype(np.int32)
+direccion_imagen_color = 'C:/Users/alteo/Documents/GitHub/CDI/CompresionConPerdidas/JPEG/mandril_color.png'
+mandril_color=scipy.misc.imread(direccion_imagen_color).astype(np.int32)
 
 start = time.time()
 mandril_jpeg = jpeg_color(mandril_color)

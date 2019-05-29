@@ -73,7 +73,7 @@ def ratio_de_compression(pixeles,escala,entradas,pixelesB):
 
 print('-------------COMPRESION RATIO----------------------')
 print(ratio_de_compression(1024,64,256,16))
-
+#pixeles,escala,entradas diccionario, palabras
 
 
 print('-------------ORTOGONAL----------------------')
@@ -110,13 +110,15 @@ print(np.dot(mat,mat.transpose()))
 #%%------
 #Pregunta wavelet
 #l = [0.2,0.8294,0.5071,-0.1223]
+
+print('-------------WAVELET----------------------')
 print("recorda +,+,+,-")
 l2 = [0.28,0.8481,0.4271,-0.141]
 l3= [-0.32,0.2481,-0.1729,-0.741]
 l = [0.28,0.8481,0.4271,-0.141]
 suman = 0
 suma2 = 0
-for i in l:
+for i in l2:
     suman += i
     suma2 += (i**2)
 print(suman,"=", sqrt(2))

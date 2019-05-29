@@ -125,3 +125,35 @@ print(suman,"=", sqrt(2))
 print("1 =",suma2)
 print((l[2]*l[0])+(l[3]*l[1]))
 #%%------
+
+
+#--------------------------------------#
+print('-------------DWHT----------------------')
+def dwht_bloque(p):
+	h_wh = H_WH(4)
+	r = np.tensordot(np.tensordot(h_wh, p, axes = ([1][0])), h_wh, axes = ([1][0]))
+	return r
+
+def idwht_bloque(p):
+	h_wh = H_WH(4)
+	r = np.tensordot(np.tensordot(h_wh, p, axes = ([1][0])), h_wh, axes = ([1][0]))
+	return r
+
+Q = np.array(
+	[[217,   8, 248, 199],
+    [215, 189, 242,  10],
+    [200,  65, 191,  92],
+    [174, 239, 237, 118]]
+)
+r = dwht_bloque(Q)
+r_inversa = idwht_bloque(r)
+print("Probando dwht_bloque")
+print(r)
+print(r == Q_resultado)
+print()
+print("Probando idwht_bloque")
+print(r_inversa)
+print(r_inversa == Q)
+#------------------------------------------------#
+
+

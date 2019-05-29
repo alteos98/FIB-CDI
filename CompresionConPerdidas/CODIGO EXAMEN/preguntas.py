@@ -13,7 +13,7 @@ espaciales a frecuencias. CIERTO
 ------------------------------------------------
 Transformaciones ortogonales
 Su inversa coincide con la traspuesta. CORRECTO
-Su determinante es 0. INCORRECTO, ES 1.
+Su determinante es 0. INCORRECTO, ES +-1.
 Transforma enteros en enteros. INCORRECTO
 Conservan la norma(energia). CORRECTO
 -------------------------------------------------
@@ -30,3 +30,5 @@ Aritmética: Lossless
 Cuantización vectorial: Lossy
 JPEG: Lossy
 Huffman: Lossless
+-------------------------------------------------
+-------------------------------------------------
